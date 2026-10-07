@@ -1,0 +1,63 @@
+.task-table-scroll {
+  max-width: 100%;
+  overflow: auto;
+  max-height: var(--task-list-height);
+  padding: var(--space-2);
+  margin-top: var(--space-4);
+  border-block: var(--border-width) solid var(--border);
+}
+.task-table {
+  width: 100%;
+  min-width: var(--table-min-width);
+  border-collapse: collapse;
+  font-size: var(--type-callout);
+}
+.task-table th,
+.task-table td {
+  padding: var(--space-3);
+  text-align: left;
+  border-bottom: var(--border-width) solid var(--border);
+  font-variant-numeric: tabular-nums;
+}
+.task-table thead th {
+  position: sticky;
+  top: var(--space-0);
+  background: var(--bg);
+  color: var(--text-secondary);
+  font-weight: var(--weight-medium);
+  z-index: var(--layer-chart);
+}
+.task-table tbody th {
+  min-width: var(--space-24);
+  max-width: var(--popover-width);
+  font-weight: var(--weight-medium);
+}
+.task-table tr:hover,
+.task-table tr:focus-within {
+  background: var(--surface);
+}
+.task-table tbody tr {
+  cursor: pointer;
+}
+.task-table [data-status='done'] .task-name strong {
+  text-decoration: line-through;
+  color: var(--text-secondary);
+}
+.task-check[aria-checked='true'] {
+  background: var(--accent);
+  color: var(--bg);
+}
+.table-status {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+.table-relation {
+  display: flex;
+  align-items: center;
+  min-height: var(--control-size);
+}
+.table-pagination {
+  margin-top: var(--space-4);
+  font-size: var(--type-callout);
+}

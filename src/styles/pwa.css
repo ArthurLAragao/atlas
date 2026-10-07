@@ -1,0 +1,29 @@
+.app-status:empty,
+.app-status > p:empty {
+  display: none;
+}
+.app-status {
+  color: var(--text-secondary);
+  font-size: var(--type-callout);
+}
+.app-status > p:not(:empty) {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding-block: var(--space-3);
+}
+.app-status svg {
+  width: var(--icon-size);
+  height: var(--icon-size);
+  flex-shrink: 0;
+}
+.update-notice {
+  background: var(--surface);
+  border: var(--border-width) solid var(--border);
+  padding: var(--space-4);
+  border-radius: var(--radius-lg);
+  margin-block: var(--space-4);
+}
+.update-notice .button-row {
+  margin-top: var(--space-3);
+}

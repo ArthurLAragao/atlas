@@ -1,0 +1,159 @@
+.study-page svg {
+  width: var(--icon-size);
+  height: var(--icon-size);
+  vertical-align: middle;
+}
+.study-next {
+  padding-block: var(--space-6);
+  border-block: var(--border-width) solid var(--border);
+  display: grid;
+  gap: var(--space-3);
+  max-width: var(--reading-width);
+}
+.study-next-actions {
+  min-width: var(--space-0);
+}
+.study-next-actions > .direction-help {
+  margin-bottom: var(--space-5);
+}
+.study-next-summary summary {
+  display: flex;
+  align-items: center;
+  min-height: var(--control-size);
+  color: var(--text-secondary);
+  font-size: var(--type-callout);
+  cursor: pointer;
+}
+.study-next-title {
+  color: var(--text-primary);
+  font-size: var(--type-title);
+  font-weight: var(--weight-medium);
+  overflow-wrap: anywhere;
+  min-height: var(--control-size);
+  display: flex;
+  align-items: center;
+}
+.study-row-text {
+  display: grid;
+  gap: var(--space-2);
+  flex: 1;
+  min-width: var(--space-0);
+  overflow-wrap: anywhere;
+}
+.study-mark {
+  display: inline-block;
+  width: var(--space-3);
+  height: var(--space-3);
+  border-radius: var(--radius-sm);
+  background: var(--text-primary);
+  margin-inline-end: var(--space-3);
+}
+.study-mark-accent {
+  background: var(--accent);
+}
+.study-mark-success {
+  background: var(--success);
+}
+.flashcards-section,
+.focus-page {
+  max-width: var(--reading-width);
+}
+.flashcard-reading {
+  padding-block: var(--space-5);
+  overflow-wrap: anywhere;
+}
+.flashcard-reading h3 {
+  white-space: pre-wrap;
+  margin-bottom: var(--space-5);
+}
+.flashcard-answer {
+  white-space: pre-wrap;
+  padding-block: var(--space-5);
+  line-height: var(--line-body);
+  border-block: var(--border-width) solid var(--border);
+}
+.recall-options {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-3);
+  padding: var(--space-0);
+  border: var(--space-0);
+  margin-block: var(--space-5);
+  min-width: var(--space-0);
+}
+.recall-options legend {
+  margin-bottom: var(--space-4);
+}
+.flashcard-manage {
+  margin-top: var(--space-5);
+}
+.flashcard-manage summary,
+.focus-page summary {
+  min-height: var(--control-size);
+  padding-block: var(--space-3);
+  cursor: pointer;
+}
+.flashcard-manage .button {
+  margin-top: var(--space-3);
+}
+.focus-stage {
+  text-align: center;
+  padding-block: var(--space-12);
+  overflow-wrap: anywhere;
+}
+.focus-stage h2 {
+  font-size: var(--type-title);
+  font-weight: var(--weight-medium);
+}
+.focus-clock {
+  font-size: var(--type-timer);
+  font-weight: var(--weight-medium);
+  font-variant-numeric: tabular-nums;
+  letter-spacing: var(--tracking-title);
+  line-height: var(--line-title);
+  margin-block: var(--space-8);
+}
+.focus-controls {
+  justify-content: center;
+}
+.focus-page svg {
+  width: var(--icon-size);
+  height: var(--icon-size);
+  flex-shrink: 0;
+}
+.focus-setup {
+  margin-block: var(--space-6);
+}
+
+.focus-page {
+  margin-inline: auto;
+}
+.focus-stage .direction-help {
+  max-width: var(--reading-width);
+  margin-inline: auto;
+  margin-top: var(--space-5);
+  font-size: var(--type-caption);
+}
+
+.study-priorities {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: var(--space-10);
+  margin-bottom: var(--space-8);
+}
+.study-priorities .study-next {
+  align-self: start;
+}
+@media (max-width: 900px) {
+  .study-priorities {
+    grid-template-columns: minmax(0, 1fr);
+    gap: var(--space-6);
+  }
+}
+
+.focus-modes {
+  padding-top: var(--space-2);
+}
+.focus-modes legend {
+  margin-bottom: var(--space-2);
+}

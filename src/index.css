@@ -1,0 +1,14 @@
+@import 'tailwindcss' source(none);
+@source './';
+@source '../index.html';
+@import './styles/tokens.css';
+@import './styles/global.css';
+
+@theme inline {
+  --color-bg: var(--bg);
+  --color-surface: var(--surface);
+  --color-text-primary: var(--text-primary);
+  --color-text-secondary: var(--text-secondary);
+  --color-accent: var(--accent);
+  --spacing: var(--space-1);
+}

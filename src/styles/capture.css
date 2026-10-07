@@ -1,0 +1,136 @@
+.compact-capture {
+  margin-block: var(--space-6);
+  padding: var(--space-1) var(--space-2);
+  border: var(--border-width) solid var(--border);
+  border-radius: var(--radius-xl);
+  background: var(--surface);
+  transition:
+    border-color var(--duration-context) var(--ease),
+    box-shadow var(--duration-context) var(--ease);
+}
+.compact-capture[data-expanded='true'] {
+  border-radius: var(--radius-md);
+  border-color: var(--control-border);
+}
+.compact-capture-line {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+}
+.compact-capture-line > input {
+  flex: 1 1 var(--space-24);
+  min-width: 0;
+  min-height: var(--control-size);
+  border: 0;
+  background: transparent;
+  padding: var(--space-2);
+  color: var(--text-primary);
+}
+.compact-capture-line > input::placeholder {
+  color: var(--text-secondary);
+}
+.compact-capture-detail {
+  min-height: 0;
+  overflow: hidden;
+  padding-top: var(--space-3);
+  margin-top: var(--space-3);
+  border-top: var(--border-width) solid var(--border);
+  animation: capture-open var(--duration-context) var(--ease);
+}
+.capture-expansion {
+  display: grid;
+  grid-template-rows: 0fr;
+  opacity: 0;
+  transition:
+    grid-template-rows var(--duration-context) var(--ease),
+    opacity var(--duration-direct) var(--ease);
+}
+.capture-expansion[data-expanded='true'] {
+  grid-template-rows: 1fr;
+  opacity: 1;
+}
+.capture-expansion[data-expanded='false'] .compact-capture-detail {
+  padding-block: var(--space-0);
+  margin-block: var(--space-0);
+  border: 0;
+}
+.compact-capture-detail .quick-task-preview {
+  margin: var(--space-0) var(--space-0) var(--space-3);
+  padding: var(--space-3);
+  border: 0;
+  background: transparent;
+}
+.compact-capture-detail > .button {
+  margin-top: var(--space-3);
+}
+.compact-capture > .form-help {
+  margin-inline: var(--space-8);
+  font-size: var(--type-caption);
+}
+.capture-options {
+  display: grid;
+  gap: var(--space-3);
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  margin-block: var(--space-3);
+}
+.compact-capture-detail label {
+  display: grid;
+  gap: var(--space-2);
+  min-width: 0;
+  font-size: var(--type-callout);
+}
+.compact-capture-detail select {
+  min-width: 0;
+  width: 100%;
+  min-height: var(--control-size);
+  padding: var(--space-3);
+  color: var(--text-primary);
+  background: var(--surface);
+  border: var(--border-width) solid var(--control-border);
+  border-radius: var(--radius-sm);
+  font: inherit;
+}
+.confirm-dialog {
+  max-width: var(--popover-width);
+  background: var(--surface-elevated);
+}
+.confirm-dialog h2 {
+  font-size: var(--type-title);
+  margin-block: var(--space-4);
+}
+.confirm-name {
+  color: var(--text-primary);
+  margin-bottom: var(--space-3);
+  overflow-wrap: anywhere;
+}
+.confirm-dialog .button-row {
+  margin-top: var(--space-6);
+}
+@keyframes capture-open {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+.capture-help summary {
+  min-height: var(--control-size);
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  font-size: var(--type-callout);
+}
+@media (max-width: 48rem) {
+  .capture-options {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .compact-capture-line > .button {
+    padding-inline: var(--space-3);
+  }
+}
+
+.compact-capture[data-expanded='false'] .compact-capture-line > .button {
+  display: none;
+}

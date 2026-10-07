@@ -1,0 +1,79 @@
+.markdown-dropzone {
+  display: grid;
+  justify-items: center;
+  gap: var(--space-3);
+  width: 100%;
+  padding: var(--space-8) var(--space-4);
+  margin-block: var(--space-6);
+  border: var(--border-width) dashed var(--control-border);
+  border-radius: var(--radius-lg);
+  background: var(--surface);
+  color: var(--text-primary);
+  font: inherit;
+}
+.markdown-dropzone[data-drag='true'] {
+  border-style: solid;
+  background: var(--surface-elevated);
+}
+.markdown-dropzone > span:not(.button) {
+  color: var(--text-secondary);
+  font-size: var(--type-callout);
+}
+.markdown-files,
+.markdown-import-result ul {
+  list-style: none;
+  padding: var(--space-0);
+}
+.markdown-files li {
+  padding-block: var(--space-5);
+  border-bottom: var(--border-width) solid var(--border);
+}
+.markdown-file-heading {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  margin-bottom: var(--space-3);
+  flex-wrap: wrap;
+}
+.markdown-file-heading div {
+  flex: 1;
+  min-width: 0;
+}
+.markdown-file-heading strong {
+  display: block;
+  overflow-wrap: anywhere;
+}
+.markdown-file-heading span {
+  font-size: var(--type-caption);
+  color: var(--text-secondary);
+  font-variant-numeric: tabular-nums;
+}
+.markdown-files p > svg {
+  vertical-align: middle;
+  margin-right: var(--space-2);
+}
+.markdown-files summary,
+.sheet-body:has(.markdown-dropzone) > details > summary {
+  min-height: var(--control-size);
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  font-size: var(--type-callout);
+}
+.sheet-body:has(.markdown-dropzone) .task-field {
+  display: grid;
+  gap: var(--space-2);
+}
+.sheet-body:has(.markdown-dropzone) select {
+  font: inherit;
+  background: var(--surface);
+  color: var(--text-primary);
+  min-height: var(--control-size);
+  padding: var(--space-3);
+  border: var(--border-width) solid var(--control-border);
+  border-radius: var(--radius-sm);
+  max-width: 100%;
+}
+.markdown-import-result li {
+  padding-block: var(--space-2);
+}

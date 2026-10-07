@@ -1,0 +1,162 @@
+:root {
+  --canvas: var(--bg);
+  --canvas-elevated: var(--surface);
+  --surface-raised: var(--surface-elevated);
+  --surface-selected: color-mix(
+    in srgb,
+    var(--text-primary) 8%,
+    var(--surface)
+  );
+  --surface-hover: color-mix(in srgb, var(--text-primary) 5%, var(--surface));
+  --line-subtle: var(--border);
+  --line-strong: var(--control-border);
+  --text-tertiary: var(--text-secondary);
+  --accent-soft: color-mix(in srgb, var(--accent) 12%, var(--surface));
+  --warning: var(--text-primary);
+  --focus-ring: var(--accent);
+  --radius-xl: 1.5rem;
+  --motion-120: 120ms;
+  --motion-160: 160ms;
+  --motion-200: 200ms;
+  --motion-240: 240ms;
+  --motion-320: 320ms;
+  --type-overline: 0.75rem;
+  --type-label: 0.8125rem;
+  --type-body-sm: 0.875rem;
+  --type-title3: 1.125rem;
+  --type-title2: 1.5rem;
+  --type-title1: 2rem;
+  --type-display: clamp(2rem, 3vw, 2.5rem);
+  --dock-bottom: 1.25rem;
+  --dock-clearance: 8rem;
+  --seek-width: 22rem;
+  --menu-max-height: 24rem;
+  --calendar-width: 28rem;
+  --toast-max-height: 50dvh;
+  --layer-toast: 25;
+  --space-0: 0;
+  --space-1: 0.25rem;
+  --space-2: 0.5rem;
+  --space-3: 0.75rem;
+  --space-4: 1rem;
+  --space-5: 1.25rem;
+  --space-6: 1.5rem;
+  --space-8: 2rem;
+  --space-10: 2.5rem;
+  --space-12: 3rem;
+  --space-16: 4rem;
+  --space-20: 5rem;
+  --space-24: 6rem;
+  --radius-sm: 0.625rem;
+  --radius-md: 0.875rem;
+  --radius-lg: 1.125rem;
+  --border-width: 1px;
+  --focus-width: 2px;
+  --focus-offset: 4px;
+  --control-size: 2.75rem;
+  --icon-size: 1.25rem;
+  --icon-large: 1.75rem;
+  --brand-mark-size: 2rem;
+  --brand-surface: #191919;
+  --sidebar-width: 15rem;
+  --sidebar-rail: 5rem;
+  --toolbar-height: 4.5rem;
+  --tab-height: 5rem;
+  --tab-item-width: 3.5rem;
+  --content-width: 78rem;
+  --reading-width: 42rem;
+  --note-editor-height: 28rem;
+  --note-list-height: 32rem;
+  --direction-description-height: 8rem;
+  --direction-list-height: 32rem;
+  --direction-mini-progress-width: 5rem;
+  --font-mono: ui-monospace, SFMono-Regular, Consolas, monospace;
+  --popover-width: 22rem;
+  --blur: 24px;
+  --font-family:
+    -apple-system, BlinkMacSystemFont, 'Segoe UI', Inter, sans-serif;
+  --type-large-title: clamp(2rem, 3vw, 2.5rem);
+  --type-timer: clamp(3rem, 12vw, 6rem);
+  --type-title: 1.5rem;
+  --type-headline: 1.125rem;
+  --type-body: 1rem;
+  --type-callout: 0.875rem;
+  --type-caption: 0.75rem;
+  --line-body: 1.6;
+  --line-title: 1.15;
+  --weight-regular: 400;
+  --weight-medium: 500;
+  --weight-semibold: 600;
+  --tracking-title: -0.045em;
+  --tracking-label: 0.055em;
+  --duration: 180ms;
+  --duration-direct: 150ms;
+  --duration-context: 220ms;
+  --preview-width: 22rem;
+  --preview-height: 24rem;
+  --preview-offset: 20px;
+  --preview-gutter: 16px;
+  --table-min-width: 62rem;
+  --heatmap-mark-size: 2rem;
+  --habit-list-height: 32rem;
+  --task-list-height: 32rem;
+  --task-calendar-min-width: calc(var(--control-size) * 7 + var(--space-1) * 6);
+  --task-column-min-width: 16rem;
+  --task-column-min-height: 12rem;
+  --task-calendar-day-height: 4rem;
+  --heatmap-empty: var(--surface);
+  --heatmap-1: color-mix(in srgb, var(--accent) 20%, var(--surface));
+  --heatmap-2: color-mix(in srgb, var(--accent) 40%, var(--surface));
+  --heatmap-3: color-mix(in srgb, var(--accent) 70%, var(--surface));
+  --heatmap-4: var(--accent);
+  --duration-none: 0s;
+  --ease: cubic-bezier(0.2, 0.8, 0.2, 1);
+  --layer-nav: 10;
+  --layer-chart: 1;
+  --layer-popover: 20;
+  --layer-skip: 30;
+  --layer-sheet: 40;
+  --layer-sheet-content: 41;
+  --sheet-width: 42rem;
+  --sheet-height: 90dvh;
+  --overlay: #00000080;
+  color-scheme: dark;
+  --bg: #101010;
+  --surface: #191919;
+  --surface-elevated: #242424;
+  --border: #383838;
+  --control-border: #858585;
+  --text-primary: #f2f2f2;
+  --text-secondary: #ababab;
+  --accent: #a3c4ff;
+  --success: #aad6b7;
+  --danger: #ffb4b4;
+  --glass-fill: #191919f2;
+  --shadow: 0 12px 40px #00000030;
+}
+:root[data-theme='light'] {
+  color-scheme: light;
+  --bg: #fafafa;
+  --surface: #f2f2f2;
+  --surface-elevated: #ffffff;
+  --border: #d8d8d8;
+  --control-border: #707070;
+  --text-primary: #1c1c1c;
+  --text-secondary: #616161;
+  --accent: #245aaa;
+  --success: #28663d;
+  --danger: #ae2929;
+  --glass-fill: #f2f2f2f2;
+}
+:root[data-accent='neutral'] {
+  --accent: #dedede;
+}
+:root[data-accent='green'] {
+  --accent: #add5bd;
+}
+:root[data-theme='light'][data-accent='neutral'] {
+  --accent: #3e3e3e;
+}
+:root[data-theme='light'][data-accent='green'] {
+  --accent: #316747;
+}

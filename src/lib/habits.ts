@@ -8,6 +8,7 @@ import {
 } from 'date-fns'
 import { ptBR } from 'date-fns/locale'
 import type { Habit, HabitLog } from '../data/models'
+import { scheduledDay, scheduleVersion } from './habit-schedule'
 
 export type Intensity = 0 | 1 | 2 | 3 | 4
 
@@ -35,14 +36,15 @@ export function formatDay(date: string): string {
   })
 }
 
-function dayResult(habit: Habit, log: HabitLog | undefined) {
+function dayResult(habit: Habit, log: HabitLog | undefined, date?: string) {
+  const target = date ? scheduledDay(habit, date).target : habit.target
   const value = log?.value ?? 0
   const rest = log?.rest ?? false
   return {
     value,
     rest,
-    completed: !rest && value >= habit.target,
-    ratio: rest ? 0 : value / habit.target,
+    completed: !rest && value >= target,
+    ratio: rest ? 0 : value / target,
   }
 }
 
@@ -50,6 +52,7 @@ export function habitDay(habit: Habit, logs: HabitLog[], date: string) {
   return dayResult(
     habit,
     logs.find((log) => log.habitId === habit.id && log.date === date),
+    date,
   )
 }
 
@@ -65,15 +68,29 @@ function progressForWeek(
   habit: Habit,
   index: Map<string, HabitLog>,
   start: Date,
+  reference = dateKey(addDays(start, 6)),
 ) {
   let completed = 0
   let rest = 0
+  let scheduled = 0
+  const goal = scheduleVersion(habit, reference)?.schedule
   for (let day = 0; day < 7; day += 1) {
-    const entry = dayResult(habit, index.get(dateKey(addDays(start, day))))
+    const key = dateKey(addDays(start, day))
+    const plan = scheduledDay(habit, key)
+    if (!plan.scheduled || plan.optional) continue
+    if ((plan.mode === 'flexible') !== (goal?.mode === 'flexible')) continue
+    scheduled++
+    const entry = dayResult(habit, index.get(key), key)
     if (entry.completed) completed += 1
     if (entry.rest) rest += 1
   }
-  return { completed, required: Math.min(habit.timesPerWeek, 7 - rest) }
+  return {
+    completed,
+    required: Math.min(
+      goal?.mode === 'flexible' ? goal.timesPerWeek : scheduled,
+      scheduled - rest,
+    ),
+  }
 }
 
 /** Monday–Sunday; future logs cannot satisfy a current week's goal. */
@@ -82,6 +99,7 @@ export function weekProgress(habit: Habit, logs: HabitLog[], today: string) {
     habit,
     logIndex(habit, logs, today),
     startOfWeek(calendarDate(today), { weekStartsOn: 1 }),
+    today,
   )
 }
 
@@ -96,15 +114,25 @@ export function getStreaks(habit: Habit, logs: HabitLog[], today: string) {
   const index = logIndex(habit, logs, today)
   const first = [...index.keys()].sort()[0]
   const unit =
-    habit.timesPerWeek === 7 ? ('dias' as const) : ('semanas' as const)
+    scheduledDay(habit, today).mode === 'flexible'
+      ? ('semanas' as const)
+      : scheduledDay(habit, today).mode === 'weekdays'
+        ? ('ocorrências' as const)
+        : ('dias' as const)
   if (!first) return { current: 0, best: 0, unit }
 
   let current = 0
   let best = 0
-  if (unit === 'dias') {
+  if (unit !== 'semanas') {
     for (let date = calendarDate(first); date <= end; date = addDays(date, 1)) {
       const key = dateKey(date)
-      const entry = dayResult(habit, index.get(key))
+      const plan = scheduledDay(habit, key)
+      if (plan.mode === 'flexible') {
+        current = 0
+        continue
+      }
+      if (!plan.scheduled || plan.optional) continue
+      const entry = dayResult(habit, index.get(key), key)
       if (entry.completed) current += 1
       else if (!entry.rest && key !== today) current = 0
       best = Math.max(best, current)
@@ -116,7 +144,17 @@ export function getStreaks(habit: Habit, logs: HabitLog[], today: string) {
       date <= currentWeek;
       date = addWeeks(date, 1)
     ) {
-      const { completed, required } = progressForWeek(habit, index, date)
+      const reference = date < currentWeek ? dateKey(addDays(date, 6)) : today
+      if (scheduledDay(habit, reference).mode !== 'flexible') {
+        current = 0
+        continue
+      }
+      const { completed, required } = progressForWeek(
+        habit,
+        index,
+        date,
+        reference,
+      )
       if (required > 0 && completed >= required) current += 1
       else if (required > 0 && date < currentWeek) current = 0
       best = Math.max(best, current)
@@ -157,16 +195,22 @@ export function aggregateDay(habits: Habit[], logs: HabitLog[], date: string) {
   let rest = 0
   let progress = 0
   for (const habit of habits) {
+    const plan = scheduledDay(habit, date)
+    if (!plan.scheduled || plan.optional) continue
     const entry = habitDay(habit, logs, date)
     if (entry.rest) rest += 1
     else progress += Math.min(entry.ratio, 1)
     if (entry.completed) completed += 1
   }
-  const active = habits.length - rest
+  const total = habits.filter((habit) => {
+    const plan = scheduledDay(habit, date)
+    return plan.scheduled && !plan.optional
+  }).length
+  const active = total - rest
   return {
     ratio: active > 0 ? progress / active : 0,
     completed,
-    total: habits.length,
+    total,
     rest,
   }
 }

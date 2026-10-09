@@ -159,5 +159,5 @@ export function parseImport(
 }
 
 export function importSummary(data: Snapshot): string {
-  return `${recordCount(data)} registros: ${data.tasks.length} tarefas, ${data.habits.length} hábitos, ${data.habitLogs.length} registros de hábitos, ${data.notes.length} notas, ${data.goals.length} metas, ${data.projects.length} projetos, ${data.subjects.length} disciplinas, ${data.studyPaths.length} trilhas, ${data.flashcards.length} flashcards e ${data.focusSessions.length} sessões de foco.`
+  return `${recordCount(data)} registros: ${data.tasks.length} tarefas, ${data.habits.length} hábitos, ${data.habitLogs.length} registros de hábitos, ${data.notes.length} notas, ${data.goals.length} metas, ${data.projects.length} projetos, ${data.subjects.length} disciplinas, ${data.studyPaths.length} trilhas, ${data.flashcards.length} flashcards e ${data.focusSessions.length} sessões de foco.${data.routine ? ' Rotina semanal incluída. Se já houver uma rotina neste navegador, ela será preservada.' : ''}`
 }

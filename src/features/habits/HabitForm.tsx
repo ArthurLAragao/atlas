@@ -4,6 +4,10 @@ import { useData } from '../../app/data-store'
 import { habitSchema, type Habit } from '../../data/models'
 import { useHabits } from './habit-store'
 import { HabitSheet } from './HabitSheet'
+import { legacySchedule, withSchedule } from '../../lib/habit-schedule'
+import { dateKey } from '../../lib/habits'
+import type { HabitSchedule } from '../../data/routine-models'
+import { ScheduleEditor } from './ScheduleEditor'
 
 export function HabitForm({
   habit,
@@ -16,7 +20,13 @@ export function HabitForm({
   const [kind, setKind] = useState(habit?.kind ?? 'binary')
   const [target, setTarget] = useState(String(habit?.target ?? 1))
   const [unit, setUnit] = useState(habit?.unit ?? 'vez')
-  const [frequency, setFrequency] = useState(habit?.timesPerWeek ?? 7)
+  const [schedule, setSchedule] = useState<HabitSchedule>(
+    () =>
+      habit?.scheduleVersions?.at(-1)?.schedule ??
+      (habit
+        ? legacySchedule(habit)
+        : { mode: 'daily', timesPerWeek: 7, days: [] }),
+  )
   const [tags, setTags] = useState(habit?.tags.join(', ') ?? '')
   const [error, setError] = useState('')
   const tagHelp = useId()
@@ -39,7 +49,13 @@ export function HabitForm({
       kind,
       target: kind === 'binary' ? 1 : Number(target.replace(',', '.')),
       unit: kind === 'binary' ? 'vez' : unit,
-      timesPerWeek: frequency,
+      timesPerWeek:
+        schedule.mode === 'weekdays'
+          ? Math.max(1, schedule.days.filter((d) => !d.optional).length)
+          : schedule.timesPerWeek,
+      ...(habit?.scheduleVersions
+        ? { scheduleVersions: habit.scheduleVersions }
+        : {}),
       tags: [
         ...new Set(
           tags
@@ -55,7 +71,30 @@ export function HabitForm({
       )
       return
     }
-    if (await save(parsed.data, habit?.updatedAt ?? null)) onClose()
+    const candidate = withSchedule(
+      {
+        ...parsed.data,
+        scheduleVersions: habit
+          ? (habit.scheduleVersions ?? [
+              {
+                effectiveFrom: '0001-01-01',
+                schedule: legacySchedule(habit),
+                target: habit.target,
+                unit: habit.unit,
+              },
+            ])
+          : [],
+      },
+      { ...schedule, timesPerWeek: parsed.data.timesPerWeek },
+      dateKey(new Date()),
+    )
+    if (!habitSchema.safeParse(candidate).success) {
+      setError(
+        'Confira a programação: escolha ao menos um dia fixo e use horários, labels e ordem válidos.',
+      )
+      return
+    }
+    if (await save(candidate, habit?.updatedAt ?? null)) onClose()
     else
       setError(
         useHabits.getState().error ??
@@ -129,20 +168,7 @@ export function HabitForm({
             </label>
           </div>
         )}
-        <label className="form-field">
-          Frequência
-          <select
-            aria-label="Frequência"
-            value={frequency}
-            onChange={(e) => setFrequency(Number(e.target.value))}
-          >
-            {[1, 2, 3, 4, 5, 6, 7].map((n) => (
-              <option key={n} value={n}>
-                {n === 7 ? 'Todos os dias' : `${n}x por semana`}
-              </option>
-            ))}
-          </select>
-        </label>
+        <ScheduleEditor value={schedule} onChange={setSchedule} />
         <div className="form-field">
           <label className="form-field">
             Tags
@@ -160,8 +186,9 @@ export function HabitForm({
         </div>
         {habit && (
           <p className="form-help">
-            Alterar o alvo ou a frequência recalcula as sequências do histórico.
-            Excluir remove também os registros deste hábito e permite desfazer.
+            Alterações de alvo e programação valem a partir de hoje. O histórico
+            anterior é preservado. Excluir remove também os registros deste
+            hábito e permite desfazer.
           </p>
         )}
         {error && (

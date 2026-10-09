@@ -1,6 +1,46 @@
 .habits-page {
   min-width: 0;
 }
+.routine-summary {
+  max-width: var(--reading-width);
+  margin-block: var(--space-6);
+  padding-block: var(--space-4);
+  border-block: var(--border-width) solid var(--border);
+  overflow-wrap: anywhere;
+}
+.routine-summary h2 {
+  font-size: var(--type-headline);
+}
+.routine-summary ul,
+.routine-import-day ul {
+  padding-inline-start: var(--space-5);
+}
+.routine-summary li span {
+  font-variant-numeric: tabular-nums;
+}
+.routine-optionals summary,
+.habit-form summary {
+  min-height: var(--control-size);
+  padding-block: var(--space-3);
+  cursor: pointer;
+  color: var(--text-primary);
+  overflow-wrap: anywhere;
+}
+.routine-import-day,
+.routine-day-fields {
+  padding-block: var(--space-4);
+  border-bottom: var(--border-width) solid var(--border);
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+.routine-day-fields {
+  display: grid;
+  gap: var(--space-3);
+}
+.heatmap-mark[data-unscheduled='true'] {
+  border: var(--border-width) dashed var(--control-border);
+  background: var(--surface);
+}
 .habits-page .page-heading {
   margin-bottom: var(--space-10);
 }

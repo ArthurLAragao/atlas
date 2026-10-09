@@ -38,6 +38,12 @@ import {
 import type { AtlasRepository, HabitLogInput } from './atlas-repository'
 import type { MergeResult } from '../../lib/data-records'
 import { dateKey } from '../../lib/habits'
+import {
+  routineConfigSchema,
+  type RoutineConfig,
+  type RoutineMapping,
+} from '../routine-models'
+import { applyRoutinePlan, editHabitSchedule } from '../../lib/routine'
 import { noteKey, resolveNote } from '../../lib/note-identity'
 import { nextOccurrence } from '../../lib/tasks'
 import { LearningRepository } from './learning-repository'
@@ -137,6 +143,49 @@ function selectWeeklyGoal(data: Snapshot, id: string): Snapshot {
 }
 
 export class DexieAtlasRepository implements AtlasRepository {
+  async applyRoutine(
+    input: RoutineConfig,
+    mapping: RoutineMapping[],
+    expectedRoutine: string | null,
+  ): Promise<Snapshot> {
+    const config = routineConfigSchema.parse(input)
+    return this.database.transaction('rw', this.database.tables, async () => {
+      const data = await this.readSnapshot()
+      if (
+        (data.routine?.updatedAt ?? null) !== expectedRoutine ||
+        mapping.some(
+          (m) =>
+            m.habitId &&
+            (data.habits.find((h) => h.id === m.habitId)?.updatedAt ?? null) !==
+              m.expectedUpdatedAt,
+        )
+      )
+        throw new RepositoryConflictError(
+          'A rotina ou um hábito mudou em outra aba. Feche e revise a configuração novamente; nenhum dado foi alterado.',
+        )
+      const now = new Date().toISOString()
+      const next = validateSnapshot(
+        applyRoutinePlan(
+          data,
+          config,
+          mapping,
+          dateKey(new Date()),
+          data.routine
+            ? new Date(
+                Math.max(
+                  Date.parse(now),
+                  Date.parse(data.routine.updatedAt) + 1,
+                ),
+              ).toISOString()
+            : now,
+          config.habits.map(() => crypto.randomUUID()),
+        ),
+      )
+      await this.table('habits').bulkPut(next.habits)
+      await this.meta().put({ key: 'weeklyRoutine', value: next.routine })
+      return this.readSnapshot()
+    })
+  }
   async saveProfile(
     profile: ProfilePreferences,
     expected?: ProfilePreferences,
@@ -1241,14 +1290,16 @@ export class DexieAtlasRepository implements AtlasRepository {
   }
   private async readSnapshot(): Promise<Snapshot> {
     const data = emptySnapshot()
-    const values = await Promise.all(
-      collections.map((name) => this.table(name).toArray()),
-    )
+    const [values, routine] = await Promise.all([
+      Promise.all(collections.map((name) => this.table(name).toArray())),
+      this.meta().get('weeklyRoutine'),
+    ])
     return validateSnapshot({
       ...Object.fromEntries(
         collections.map((name, index) => [name, values[index] ?? data[name]]),
       ),
       experience: await readExperience(this.database),
+      ...(routine ? { routine: routine.value } : {}),
       ...(await readProfileData(this.database)),
     })
   }
@@ -1256,6 +1307,9 @@ export class DexieAtlasRepository implements AtlasRepository {
     await this.meta().put({ key: 'experience', value: data.experience })
     await this.meta().put({ key: 'profile', value: data.profile })
     await this.meta().put({ key: 'activity', value: data.activity })
+    if (data.routine)
+      await this.meta().put({ key: 'weeklyRoutine', value: data.routine })
+    else await this.meta().delete('weeklyRoutine')
     for (const name of collections) {
       await this.table(name).clear()
       await this.table(name).bulkPut(data[name])
@@ -1391,8 +1445,16 @@ export class DexieAtlasRepository implements AtlasRepository {
           )
         }
       }
+      const prepared =
+        name === 'habits'
+          ? editHabitSchedule(
+              data.habits.find((h) => h.id === item.id),
+              habitSchema.parse(item),
+              dateKey(new Date()),
+            )
+          : item
       const saved = {
-        ...item,
+        ...prepared,
         isExample: false,
         createdAt: previous?.createdAt ?? item.createdAt,
         updatedAt:

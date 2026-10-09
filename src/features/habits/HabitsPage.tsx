@@ -1,25 +1,27 @@
 import { TransientToast } from '../../components/TransientToast'
-import { useEffect, useState } from 'react'
+import { lazy, Suspense, useEffect, useState } from 'react'
 import { useSearchParams } from 'react-router-dom'
 import { createPortal } from 'react-dom'
 import { Plus, Pencil, X } from 'lucide-react'
 import { useData } from '../../app/data-store'
 import { PageHeader } from '../../components/PageHeader'
-import {
-  aggregateDay,
-  dateKey,
-  getStreaks,
-  weekProgress,
-} from '../../lib/habits'
+import { aggregateDay, getStreaks, weekProgress } from '../../lib/habits'
 import type { Habit } from '../../data/models'
 import { useHabits } from './habit-store'
 import { HabitForm } from './HabitForm'
 import { LogForm } from './LogForm'
 import { HabitList } from './HabitList'
 import { Heatmap } from './Heatmap'
+import { ScheduledHabitList } from './ScheduledHabitList'
+import { DaySelector } from './DaySelector'
+import { PreviousNight } from './PreviousNight'
+import { useSelectedDay } from './use-selected-day'
+import { useClock } from '../today/use-clock'
+const RoutineImport = lazy(() => import('./RoutineImport'))
 import '../../styles/habits.css'
 
 type Sheet =
+  | { type: 'routine' }
   | { type: 'habit'; habit?: Habit }
   | { type: 'log'; habitId: string; date: string }
 
@@ -35,7 +37,10 @@ export default function HabitsPage() {
 function HabitWorkspace({ initialHabit }: { initialHabit: string }) {
   const data = useData((s) => s.data)
   const busy = useData((s) => s.busy)
-  const [today, setToday] = useState(() => dateKey(new Date()))
+  const now = useClock()
+  const day = useSelectedDay(now)
+  const today = day.selectedDate
+  const [library, setLibrary] = useState(false)
   const [selectedId, setSelectedId] = useState(initialHabit)
   const [weeks, setWeeks] = useState(13)
   const [sheet, setSheet] = useState<Sheet | null>(null)
@@ -45,13 +50,6 @@ function HabitWorkspace({ initialHabit }: { initialHabit: string }) {
   const refreshUndo = useHabits((s) => s.refreshUndo)
   useEffect(() => {
     void refreshUndo()
-    const refresh = () => setToday(dateKey(new Date()))
-    const timer = window.setInterval(refresh, 60_000)
-    window.addEventListener('focus', refresh)
-    return () => {
-      clearInterval(timer)
-      window.removeEventListener('focus', refresh)
-    }
   }, [refreshUndo])
   const habit = data.habits.find((item) => item.id === selectedId)
   const selected = habit?.id ?? 'all'
@@ -69,12 +67,51 @@ function HabitWorkspace({ initialHabit }: { initialHabit: string }) {
         Consistência que você consegue enxergar. Registre hoje, cuide do
         descanso e acompanhe o que se repete.
       </PageHeader>
+      <DaySelector day={day} />
+      <div className="button-row">
+        <button
+          className="button"
+          aria-pressed={!library}
+          onClick={() => setLibrary(false)}
+        >
+          Hábitos do dia
+        </button>
+        <button
+          className="button"
+          aria-pressed={library}
+          onClick={() => setLibrary(true)}
+        >
+          Biblioteca ({data.habits.length})
+        </button>
+        <button
+          className="button"
+          disabled={busy}
+          onClick={() => setSheet({ type: 'routine' })}
+        >
+          Importar rotina semanal
+        </button>
+      </div>
+      {day.followingToday && (
+        <PreviousNight
+          habits={data.habits}
+          logs={data.habitLogs}
+          today={day.today}
+          onRecord={(id, date) => record(date, id)}
+        />
+      )}
       <div className="section-heading">
         <div>
-          <h2>Hoje</h2>
+          <h2>
+            {library
+              ? 'Biblioteca de hábitos'
+              : day.followingToday
+                ? 'Hoje'
+                : 'Dia selecionado'}
+          </h2>
           <p className="form-help">
-            {total.completed} de {total.total} concluídos · {total.rest} em
-            descanso
+            {total.total
+              ? `${total.completed} de ${total.total} obrigatórios concluídos · ${total.rest} em descanso`
+              : 'Sem hábitos obrigatórios programados'}
           </p>
         </div>
         <button
@@ -88,16 +125,31 @@ function HabitWorkspace({ initialHabit }: { initialHabit: string }) {
         </button>
       </div>
       {data.habits.length ? (
-        <HabitList
-          habits={data.habits}
-          logs={data.habitLogs}
-          today={today}
-          busy={busy}
-          selected={selected}
-          onSelect={setSelectedId}
-          onRecord={(id) => record(today, id)}
-          onToggle={(item, value) => void log(item.id, today, value, false)}
-        />
+        <div>
+          {library ? (
+            <HabitList
+              habits={data.habits}
+              logs={data.habitLogs}
+              today={today}
+              busy={busy}
+              selected={selected}
+              onSelect={setSelectedId}
+              onRecord={(id) => record(today, id)}
+              onToggle={(item, value) => void log(item.id, today, value, false)}
+            />
+          ) : (
+            <ScheduledHabitList
+              habits={data.habits}
+              logs={data.habitLogs}
+              today={today}
+              busy={busy}
+              selected={selected}
+              onSelect={setSelectedId}
+              onRecord={(id) => record(today, id)}
+              onToggle={(item, value) => void log(item.id, today, value, false)}
+            />
+          )}
+        </div>
       ) : (
         <div className="habits-empty">
           <h2>Sua constância começa aqui.</h2>
@@ -205,7 +257,7 @@ function HabitWorkspace({ initialHabit }: { initialHabit: string }) {
                 </span>
               </div>
               <p>
-                {habit.timesPerWeek === 7
+                {streak.unit !== 'semanas'
                   ? 'O dia de hoje fica aberto até meia-noite.'
                   : `Objetivo de ${habit.timesPerWeek}x por semana, de segunda a domingo. A semana atual ainda está aberta.`}{' '}
                 Descansos preservam a sequência sem somar conclusões.
@@ -217,7 +269,7 @@ function HabitWorkspace({ initialHabit }: { initialHabit: string }) {
             habits={data.habits}
             logs={data.habitLogs}
             habit={habit}
-            today={today}
+            today={day.today}
             weeks={weeks}
             onEdit={record}
           />
@@ -225,6 +277,11 @@ function HabitWorkspace({ initialHabit }: { initialHabit: string }) {
       )}
       {sheet?.type === 'habit' && (
         <HabitForm habit={sheet.habit} onClose={() => setSheet(null)} />
+      )}
+      {sheet?.type === 'routine' && (
+        <Suspense fallback={<p role="status">Abrindo configuração.</p>}>
+          <RoutineImport onClose={() => setSheet(null)} />
+        </Suspense>
       )}
       {sheet?.type === 'log' && (
         <LogForm

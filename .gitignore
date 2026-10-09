@@ -16,3 +16,6 @@ docs/screenshots/*
 .vscode/
 .idea/
 .DS_Store
+
+# User-authored routine configurations remain private.
+local-private/

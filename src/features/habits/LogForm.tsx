@@ -2,7 +2,8 @@ import { ConfirmAction } from '../../components/ConfirmAction'
 import { DateField } from '../../components/DateField'
 import { useId, useState, type FormEvent } from 'react'
 import { useData } from '../../app/data-store'
-import { dateKey } from '../../lib/habits'
+import { dateKey, formatDay } from '../../lib/habits'
+import { scheduledDay } from '../../lib/habit-schedule'
 import { useHabits } from './habit-store'
 import { HabitSheet } from './HabitSheet'
 
@@ -101,6 +102,7 @@ function LogFields({
   const [version] = useState(initialVersion)
   const [error, setError] = useState('')
   const quantityHelp = useId()
+  const plan = scheduledDay(habit, date)
   const log = useHabits((s) => s.log)
   const removeLog = useHabits((s) => s.removeLog)
   async function submit(event: FormEvent) {
@@ -131,6 +133,12 @@ function LogFields({
       aria-busy={busy}
       onSubmit={(e) => void submit(e)}
     >
+      <p className="form-help">
+        Atribuição: {formatDay(date)} · {plan.label}.{' '}
+        {plan.dayOffset === 1
+          ? 'Horário da madrugada seguinte; o registro pertence à data acima.'
+          : ''}
+      </p>
       {habit.kind === 'binary' ? (
         <label className="toggle-row">
           <input
@@ -144,7 +152,7 @@ function LogFields({
       ) : (
         <div className="form-field">
           <label className="form-field">
-            Quantidade ({habit.unit})
+            Quantidade ({plan.unit})
             <input
               aria-describedby={quantityHelp}
               inputMode="decimal"
@@ -155,7 +163,7 @@ function LogFields({
             />
           </label>
           <span id={quantityHelp} className="form-help">
-            Alvo: {habit.target.toLocaleString('pt-BR')} {habit.unit}.
+            Alvo: {plan.target.toLocaleString('pt-BR')} {plan.unit}.
           </span>
         </div>
       )}

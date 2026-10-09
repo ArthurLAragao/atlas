@@ -6,6 +6,7 @@ import { useEffect, useId, useRef, useState, type KeyboardEvent } from 'react'
 import { format, parseISO } from 'date-fns'
 import { ptBR } from 'date-fns/locale'
 import type { Habit, HabitLog } from '../../data/models'
+import { scheduledDay } from '../../lib/habit-schedule'
 import {
   aggregateDay,
   formatDay,
@@ -21,16 +22,23 @@ function dayDescription(
   habit?: Habit,
 ) {
   if (habit) {
+    const plan = scheduledDay(habit, date)
     const day = habitDay(habit, logs, date)
-    return day.rest
+    const description = day.rest
       ? 'Descanso'
       : habit.kind === 'binary'
         ? day.completed
           ? 'Concluído'
           : 'Não concluído'
-        : `${day.value.toLocaleString('pt-BR')} de ${habit.target.toLocaleString('pt-BR')} ${habit.unit}`
+        : `${day.value.toLocaleString('pt-BR')} de ${plan.target.toLocaleString('pt-BR')} ${plan.unit}`
+    if (!plan.scheduled)
+      return `Sem programação · ${day.value > 0 || day.rest ? description : 'registros eventuais preservados'}`
+    return plan.optional
+      ? `Opcional · ${description} · fora do progresso obrigatório`
+      : description
   }
   const day = aggregateDay(habits, logs, date)
+  if (day.total === 0) return 'Sem programação obrigatória · dia neutro'
   return `${day.completed} de ${day.total} hábitos concluídos · ${day.rest} em descanso · ${Math.round(day.ratio * 100)}% dos alvos`
 }
 
@@ -134,8 +142,10 @@ export function Heatmap({
         Semanas em colunas; segunda a domingo em linhas. Use as setas para
         escolher um dia e Enter para editar.{' '}
         {habit
-          ? `Intensidade relativa ao alvo de ${habit.target.toLocaleString('pt-BR')} ${habit.unit}.`
-          : 'Intensidade: média dos alvos de cada hábito, sem os descansos.'}
+          ? habit.scheduleVersions
+            ? 'Intensidade relativa ao alvo vigente em cada data. Opcionais e dias sem programação ficam fora do progresso obrigatório.'
+            : `Intensidade relativa ao alvo de ${habit.target.toLocaleString('pt-BR')} ${habit.unit}.`
+          : 'Intensidade: média dos alvos obrigatórios programados nessa data, sem opcionais nem descansos. Dias sem programação são neutros.'}
       </p>
       {textMode ? (
         <div className="history-text">
@@ -234,14 +244,21 @@ export function Heatmap({
                       </span>
                       {grid.map((week, col) => {
                         const day = week[row]!
+                        const aggregate = habit
+                          ? undefined
+                          : aggregateDay(habits, entriesFor(day.date), day.date)
                         const value = habit
                           ? habitDay(habit, entriesFor(day.date), day.date)
-                          : aggregateDay(habits, entriesFor(day.date), day.date)
+                          : aggregate!
                         const rest = habit
                           ? Boolean(value.rest)
-                          : aggregateDay(habits, entriesFor(day.date), day.date)
-                              .rest === habits.length
+                          : aggregate!.total > 0 &&
+                            aggregate!.rest === aggregate!.total
                         const level = intensity(value.ratio)
+                        const unscheduled = habit
+                          ? !scheduledDay(habit, day.date).scheduled ||
+                            scheduledDay(habit, day.date).optional
+                          : aggregate!.total === 0
                         const description = `${formatDay(day.date)} · ${day.future ? 'Dia futuro' : dayDescription(habits, entriesFor(day.date), day.date, habit)}`
                         return (
                           <div
@@ -275,9 +292,12 @@ export function Heatmap({
                                     data-level={level}
                                     data-rest={rest}
                                     data-today={day.date === today}
+                                    data-unscheduled={unscheduled}
                                     aria-hidden="true"
                                   >
-                                    {rest ? (
+                                    {unscheduled ? (
+                                      <Minus />
+                                    ) : rest ? (
                                       <Minus />
                                     ) : level === 4 ? (
                                       <Check />

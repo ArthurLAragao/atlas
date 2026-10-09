@@ -192,6 +192,8 @@ export function mergeSnapshots(
     ...incoming.experience.filter((event) => !keys.has(event.key)),
   ]
   data.profile = current.profile ?? incoming.profile
+  if (current.routine || incoming.routine)
+    data.routine = current.routine ?? incoming.routine
   const activity = deduplicateActivity([
     ...current.activity,
     ...incoming.activity,

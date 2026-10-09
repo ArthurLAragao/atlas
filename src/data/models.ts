@@ -5,6 +5,11 @@ import {
   type ActivityEvent,
 } from './profile-models.js'
 import { z } from 'zod'
+import {
+  scheduleVersionsSchema,
+  weeklyRoutineSchema,
+  type WeeklyRoutine,
+} from './routine-models.js'
 
 const id = z
   .string()
@@ -80,11 +85,18 @@ export const habitSchema = z
     target: z.number().positive().finite(),
     unit: z.string().trim().min(1).max(40),
     timesPerWeek: z.number().int().min(1).max(7),
+    scheduleVersions: scheduleVersionsSchema.optional(),
   })
   .strict()
   .refine(
     (habit) => habit.kind !== 'binary' || habit.target === 1,
     'Hábito binário precisa de alvo 1.',
+  )
+  .refine(
+    (habit) =>
+      habit.kind !== 'binary' ||
+      habit.scheduleVersions?.every((v) => v.target === 1) !== false,
+    'Hábito binário precisa de alvo 1 em todas as versões.',
   )
 export const habitLogSchema = z
   .object({
@@ -370,6 +382,7 @@ export type Snapshot = { [K in Collection]: EntityMap[K][] } & {
   experience: ExperienceEvent[]
   profile: ProfilePreferences | null
   activity: ActivityEvent[]
+  routine?: WeeklyRoutine | null
 }
 export const emptySnapshot = (): Snapshot => ({
   experience: [],
@@ -388,6 +401,7 @@ export const emptySnapshot = (): Snapshot => ({
 })
 export const snapshotSchema = z
   .object({
+    routine: weeklyRoutineSchema.nullable().optional(),
     profile: profileSchema.nullable().default(null),
     activity: z
       .array(activityEventSchema)

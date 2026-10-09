@@ -44,3 +44,22 @@ Não são incluídos histórico original, .vercel, ambientes, bancos, backups, p
 Estado conhecido em 06/10/2026: Preview pessoal protegido por Vercel Authentication em All Deployments, sem exceções públicas. HTTPS, rotas/refresh, assets ausentes 404, manifest, ícones, worker e navegação offline foram exercitados. O roteiro hospedado de gravação offline ficou pendente após timeout/autenticação; gravação, refresh e reconexão passaram localmente. A publicação GitHub não modifica deploy, alias ou proteção e não apresenta essa hospedagem como demo pública.
 
 Instalação física Android/Windows, NVDA, zoom nativo a 200% e dispositivos adicionais não foram comprovados por resposta humana. Automações Axe/Playwright não equivalem a esses testes. Esses limites não impedem a publicação do código de portfólio quando informados.
+
+## Atualização genérica de rotina — 2026-10-09
+
+Transferência por patch limitado à funcionalidade e testes, sem importar histórico original, arquivos pessoais ou relatórios internos. Exemplos/contextos anonimizados, MIT, avisos e capturas fictícias anteriores foram preservados. As imagens de apresentação permanecem históricas, sem novas capturas nesta atualização.
+
+| Check desta cópia pública | Resultado |
+| --- | --- |
+| npm run lint | Aprovado, saída 0. |
+| npm run typecheck | Aprovado, saída 0. |
+| npm run test | 875 testes / 73 arquivos aprovados; saída 0; 298,73 s. |
+| npm run build | Aprovado, saída 0; 75 entradas de precache. |
+| E2E direcionados no build desta cópia | 10/10 aprovados em 1,2 min, saída 0: cinco cenários de rotina, resultados-chave/persistência, recuperação de erro, manifest com sessão, offline/rotas inéditas e atualização real do worker. |
+| Links da documentação selecionada | 21 referências locais existentes. |
+
+Suíte E2E integral de 114/114 passou no checkout original antes desta transferência e foi aprovada pelo titular; não se declara essa execução como um novo full run da cópia pública. Todos os 114 cenários continuam disponíveis, sem remoção, pulo ou enfraquecimento. Testes usam dados fictícios, perfis e bancos descartáveis. As regressões de programação validam frequência 7 com opcionais, horário com deslocamento, versões históricas, backups e conflitos entre abas.
+
+O build informou diagnóstico de tempo de callback do plugin PWA (closeBundle); não houve erro de aplicação/build, mudança de dependências ou tentativa de ocultar o aviso. NO_COLOR/FORCE_COLOR continua sendo aviso do ambiente do runner. Nenhuma medição Lighthouse nova: resultados históricos 86 frio / 99 retorno e pendências humanas permanecem.
+
+Este commit está preparado localmente, sem push, deploy ou mudança de proteção/alias. A configuração de cada usuário exige revisão/importação explícita; não integra código público nem pacote de hospedagem. [Regras e compatibilidade](WEEKLY-ROUTINE.md).

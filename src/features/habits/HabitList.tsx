@@ -4,7 +4,8 @@ import { Check, Minus, Plus } from 'lucide-react'
 import { m as motion } from 'framer-motion'
 import { useAtlasReducedMotion } from '../../app/use-motion'
 import type { Habit, HabitLog } from '../../data/models'
-import { getStreaks, habitDay, weekProgress } from '../../lib/habits'
+import { dateKey, getStreaks, habitDay, weekProgress } from '../../lib/habits'
+import { plannedTime, scheduledDay } from '../../lib/habit-schedule'
 
 export function HabitList({
   habits,
@@ -37,6 +38,10 @@ export function HabitList({
     const day = habitDay(habit, entries, today)
     const streak = getStreaks(habit, entries, today)
     const week = weekProgress(habit, entries, today)
+    const plan = scheduledDay(habit, today)
+    const label = plan.label
+    const dateWord =
+      today === dateKey(new Date()) ? 'hoje' : 'na data selecionada'
     return (
       <div className="habit-row" data-selected={habit.id === selected}>
         {habit.kind === 'binary' ? (
@@ -44,8 +49,8 @@ export function HabitList({
             className="habit-check"
             aria-label={
               day.completed
-                ? `Desmarcar ${habit.title}`
-                : `Marcar ${habit.title} como concluído`
+                ? `Desmarcar ${label}`
+                : `Marcar ${label} como concluído`
             }
             aria-pressed={day.completed}
             disabled={busy}
@@ -65,7 +70,7 @@ export function HabitList({
           <button
             className="habit-check"
             disabled={busy}
-            aria-label={`Registrar ${habit.title}`}
+            aria-label={`Registrar ${label}`}
             onClick={() => onRecord(habit.id)}
           >
             {day.rest ? (
@@ -85,17 +90,24 @@ export function HabitList({
             aria-pressed={selected === habit.id}
             onClick={() => onSelect(habit.id)}
           >
-            <strong>{habit.title}</strong>
+            <strong>{label}</strong>
           </button>
           <span className="habit-day" id={`habit-day-${habit.id}`}>
             {day.rest
-              ? 'Descanso hoje'
+              ? `Descanso ${dateWord}`
               : habit.kind === 'binary'
                 ? day.completed
-                  ? 'Concluído hoje'
-                  : 'Ainda não registrado hoje'
-                : `${day.value.toLocaleString('pt-BR')} / ${habit.target.toLocaleString('pt-BR')} ${habit.unit} hoje`}
+                  ? `Concluído ${dateWord}`
+                  : `Ainda não registrado ${dateWord}`
+                : `${day.value.toLocaleString('pt-BR')} / ${plan.target.toLocaleString('pt-BR')} ${plan.unit} na data selecionada`}
           </span>
+          {habit.scheduleVersions && (
+            <span className="form-help">
+              {plan.scheduled
+                ? `${plannedTime(plan)}${plan.optional ? ' · Opcional' : ''}`
+                : 'Fora da programação deste dia'}
+            </span>
+          )}
         </div>
         <div className="habit-rhythm">
           <span>

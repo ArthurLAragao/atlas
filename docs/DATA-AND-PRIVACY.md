@@ -60,3 +60,11 @@ Atualização automatizada preservou nota não salva e o mesmo timer. Timer não
 Remover exemplos conserva os editados/referenciados por registros pessoais e permite desfazer. Excluir normalmente confirma e oferece recuperação conforme módulo. **Limpar todos os dados** exige `APAGAR TUDO` e ciência da perda, oferece backup e **não tem desfazer**: apaga conteúdo, perfil/fixados, atividade, XP, undo e rascunhos; mantém preferências e marcadores que evitam reinserir exemplos. Se o navegador bloquear remoção de rascunhos, a UI anuncia essa falha, sem presumir limpeza completa.
 
 Nenhum banco pessoal foi lido/limpo/alterado para preparar a entrega. [Validação e limites da entrega](VALIDATION.md).
+
+## Configuração semanal privada
+
+Rotina é dado configurável do usuário, armazenado localmente no IndexedDB somente após revisão e confirmação. O código público não contém rotina pessoal. Mantenha seus arquivos em uma pasta fora do repositório ou em `local-private/` (ignorada pelo Git); ignorar não remove arquivos previamente versionados.
+
+A configuração `atlas-weekly-routine`, versão 1, aceita JSON de até 1 MiB, sete dias e até 100 hábitos. Não é um backup do banco: **Hábitos → Importar rotina semanal** revisa o conteúdo e exige associação explícita a históricos compatíveis ou criação de novos IDs. Hábitos não associados permanecem; importar novamente como novos cria históricos separados.
+
+JSON e Markdown completo Atlas incluem rotina, variações e versões de vigência, além dos registros existentes. Preferências gerais continuam fora do backup. Nota .md individual não representa rotina. Backups antigos sem esses campos são aceitos; merge conserva IDs e rotina já existentes. Nada é aplicado automaticamente em outra instalação/dispositivo. [Regras de data e histórico](WEEKLY-ROUTINE.md).

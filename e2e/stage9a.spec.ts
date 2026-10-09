@@ -657,6 +657,35 @@ test('falha de persistência reverte conclusão e permite tentar novamente', asy
     exact: true,
   })
   await expect(check).toBeVisible()
+  // Inject failure into completion only after quick capture has committed.
+  await expect
+    .poll(() =>
+      page.evaluate(
+        () =>
+          new Promise<string | undefined>((resolve, reject) => {
+            const request = indexedDB.open('atlas-local')
+            request.onerror = () => reject(request.error)
+            request.onsuccess = () => {
+              const db = request.result
+              const transaction = db.transaction('tasks', 'readonly')
+              const tasks = transaction.objectStore('tasks').getAll()
+              transaction.oncomplete = () => {
+                db.close()
+                resolve(
+                  (tasks.result as { title: string; status: string }[]).find(
+                    (item) => item.title === 'Conclusão segura',
+                  )?.status,
+                )
+              }
+              transaction.onerror = () => {
+                db.close()
+                reject(transaction.error)
+              }
+            }
+          }),
+      ),
+    )
+    .toBe('todo')
   await page.evaluate(() => {
     const original = IDBObjectStore.prototype.put
     IDBObjectStore.prototype.put = function (

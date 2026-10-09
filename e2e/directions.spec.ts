@@ -353,6 +353,14 @@ test('meta com resultados manuais preserva 3/10 e 8/30 quando tarefas vinculadas
   await page
     .getByRole('button', { name: `Concluir ${task.title}`, exact: true })
     .click()
+  // A full navigation must follow the committed record, not optimistic paint.
+  await expect
+    .poll(
+      async () =>
+        (await readData(page)).tasks.find((item) => item.id === task.id)
+          ?.status,
+    )
+    .toBe('done')
   await page.goto(`/metas?goal=${goal.id}`)
   await expect(page.getByText('28%', { exact: true }).first()).toBeVisible()
   const saved = (await readData(page)).goals.find(

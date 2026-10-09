@@ -4,7 +4,7 @@
 
 O Atlas reúne tarefas, hábitos, notas, estudos, metas e projetos em uma estrutura pronta para preencher. A proposta é organizar a rotina sem manter uma ferramenta com configuração excessiva.
 
-Esta é a primeira entrega de portfólio do projeto. O desenvolvimento deste escopo está congelado. A hospedagem de uso pessoal é protegida e **não é uma demo pública**; não há release/tag publicada informada aqui.
+Esta é a primeira entrega de portfólio do projeto. A direção visual permanece congelada; a programação semanal de hábitos foi acrescentada sem redesign. A hospedagem de uso pessoal é protegida e **não é uma demo pública**; não há release/tag publicada informada aqui.
 
 ## Recursos implementados
 
@@ -12,7 +12,7 @@ Esta é a primeira entrega de portfólio do projeto. O desenvolvimento deste esc
 | --------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
 | Hoje                  | Tarefas do dia, revisão de pendências, hábitos, compromisso manual, meta semanal escolhida pelo usuário e widgets ocultáveis/reordenáveis por arraste ou teclado.  |
 | Tarefas               | Captura em português com datas/hora/tags/prioridade, contextos editáveis, subtarefas/repetição; Lista, Kanban, Calendário e Tabela, com alternativa ao arraste.    |
-| Hábitos               | Binários/quantitativos, frequência diária/semanal, descanso, sequências e heatmaps individual/geral com cinco níveis e alternativa textual.                        |
+| Hábitos               | Binários/quantitativos, dias fixos/frequência flexível, variações por dia, Hoje/Ontem, opcionais, histórico versionado, descanso e heatmaps acessíveis.                        |
 | Notas                 | Editor/prévia Markdown, quatro templates, tags/busca, [[links]], autocomplete/backlinks, preview por mouse ou ação explícita e importação local de .md.            |
 | Metas e projetos      | Resultados-chave manuais, progresso complementar de tarefas, prazo/meta semanal; projetos com tarefas/notas/metas vinculadas por ID e links/repositório opcionais. |
 | Estudos               | Disciplinas, avaliações, faltas, provas/entregas, tarefas vinculadas, trilhas/checklist e flashcards com versão pequena de SM-2.                                   |
@@ -20,6 +20,8 @@ Esta é a primeira entrega de portfólio do projeto. O desenvolvimento deste esc
 | Perfil e preferências | Perfil/avatar local, atividade/heatmap, até três fixados; aparência, movimento/transparência, widgets, dados e XP discreto/ocultável.                              |
 
 Exemplos vêm prontos e podem ser removidos. Ações destrutivas comuns têm confirmação e recuperação; **limpeza total não tem desfazer**. **Ctrl/Cmd+K** captura/busca; **?** abre atalhos fora de campos. O dock inferior inclui Perfil; no celular, **Mais** reúne Notas, Metas e Estudos. Preferências fica no cabeçalho junto a Aparência.
+
+Rotina semanal é configurável e importada por **Hábitos → Importar rotina semanal**, com revisão e associação explícita de históricos. Não há rotina pessoal embutida, conclusão automática por horário ou tarefas geradas a partir da agenda. [Regras e compatibilidade](docs/WEEKLY-ROUTINE.md).
 
 Captura: `estudar AWS amanhã 19h #faculdade !alta`. `nota: ideia de projeto` cria uma nota e abre o editor.
 
@@ -68,7 +70,7 @@ O conteúdo fica no IndexedDB; preferências gerais e rascunhos ficam no localSt
 
 Após o preparo online, recarga e recursos precacheados funcionam offline. Aguarde **“App preparado para recarga offline neste navegador.”** em Preferências. Atualizações oferecem **Atualizar** e **Agora não**. Salve outros formulários antes de atualizar; preservação de nota e timer foi exercitada por automação.
 
-- **JSON:** conteúdo, IDs, relações, perfil/fixados, atividade e XP.
+- **JSON:** conteúdo, IDs, relações, perfil/fixados, atividade, XP, rotina e versões de programação.
 - **Markdown completo:** leitura humana com bloco JSON de restauração. Importar usa o bloco, não alterações feitas somente no texto legível.
 - **Nota .md individual:** texto, [[links]], título, tags e arquivamento; não restaura o banco inteiro nem todas as relações.
 

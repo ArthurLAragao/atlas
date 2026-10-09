@@ -11,6 +11,7 @@ import type {
 } from '../models'
 import type { FocusAction } from '../../lib/focus'
 import type { MergeResult } from '../../lib/data-integrity'
+import type { RoutineConfig, RoutineMapping } from '../routine-models'
 
 export interface HabitLogInput {
   habitId: string
@@ -28,6 +29,11 @@ export interface StartFocusInput {
 }
 
 export interface AtlasRepository {
+  applyRoutine(
+    config: RoutineConfig,
+    mapping: RoutineMapping[],
+    expectedRoutine: string | null,
+  ): Promise<Snapshot>
   saveProfile(
     profile: ProfilePreferences,
     expected?: ProfilePreferences,

@@ -17,7 +17,11 @@ import { selectedWeeklyGoal } from '../../lib/goals'
 import { TaskList } from '../tasks/TaskList'
 import { TaskForm } from '../tasks/TaskForm'
 import { useTasks } from '../tasks/task-store'
-import { HabitList } from '../habits/HabitList'
+import { ScheduledHabitList } from '../habits/ScheduledHabitList'
+import { DaySelector } from '../habits/DaySelector'
+import { PreviousNight } from '../habits/PreviousNight'
+import { useSelectedDay } from '../habits/use-selected-day'
+import { routineDay } from '../../lib/habit-schedule'
 import { LogForm } from '../habits/LogForm'
 import { useHabits } from '../habits/habit-store'
 import { AppointmentForm } from './AppointmentForm'
@@ -32,7 +36,7 @@ import '../../styles/today.css'
 type Sheet =
   | { kind: 'widgets' }
   | { kind: 'task'; task?: Task }
-  | { kind: 'log'; habitId: string }
+  | { kind: 'log'; habitId: string; date: string }
   | { kind: 'appointment'; task?: Task }
   | { kind: 'goal'; goal?: Goal }
 
@@ -40,6 +44,7 @@ export default function TodayPage() {
   const widgets = usePreferences((state) => state.preferences.widgets)
   const now = useClock()
   const today = dateKey(now)
+  const habitDate = useSelectedDay(now)
   const data = useData((s) => s.data)
   const profileName = data.profile?.name.trim()
   const busy = useData((s) => s.busy)
@@ -50,7 +55,12 @@ export default function TodayPage() {
   const appointment = nextAppointment(data.tasks, now)
   const goal = selectedWeeklyGoal(data.goals)
   const progress = goal ? goalTaskProgress(goal, data.tasks) : undefined
-  const total = aggregateDay(data.habits, data.habitLogs, today)
+  const total = aggregateDay(
+    data.habits,
+    data.habitLogs,
+    habitDate.selectedDate,
+  )
+  const routine = routineDay(data.routine, habitDate.selectedDate)
   const pending = day.tasks.filter((task) => task.status !== 'done').length
   useEffect(() => {
     void useTasks.getState().refreshUndo()
@@ -167,29 +177,49 @@ export default function TodayPage() {
       <section className="today-section" aria-labelledby="today-habits">
         <div className="section-heading">
           <div>
-            <h2 id="today-habits">Hábitos de hoje</h2>
+            <h2 id="today-habits">
+              {habitDate.followingToday
+                ? 'Hábitos de hoje'
+                : 'Hábitos do dia selecionado'}
+            </h2>
             <p className="form-help">
-              {total.completed} de {total.total} concluídos · {total.rest} em
-              descanso
+              {total.total
+                ? `${total.completed} de ${total.total} obrigatórios concluídos · ${total.rest} em descanso`
+                : 'Sem hábitos obrigatórios programados'}
             </p>
           </div>
           <Link className="button" to="/habitos">
             Ver heatmap
           </Link>
         </div>
-        {data.habits.length ? (
-          <HabitList
+        <DaySelector day={habitDate} />
+        {habitDate.followingToday && (
+          <PreviousNight
             habits={data.habits}
             logs={data.habitLogs}
             today={today}
+            onRecord={(habitId, date) =>
+              setSheet({ kind: 'log', habitId, date })
+            }
+          />
+        )}
+        {data.habits.length ? (
+          <ScheduledHabitList
+            habits={data.habits}
+            logs={data.habitLogs}
+            today={habitDate.selectedDate}
             busy={busy}
             selected=""
             onSelect={(id) =>
               navigate(`/habitos?habit=${encodeURIComponent(id)}`)
             }
-            onRecord={(habitId) => setSheet({ kind: 'log', habitId })}
+            onRecord={(habitId) =>
+              setSheet({ kind: 'log', habitId, date: habitDate.selectedDate })
+            }
             onToggle={(habit, value) =>
-              void useHabits.getState().log(habit.id, today, value, false)
+              void useHabits
+                .getState()
+                .log(habit.id, habitDate.selectedDate, value, false)
             }
           />
         ) : (
@@ -240,6 +270,27 @@ export default function TodayPage() {
         Um dia de cada vez{profileName ? `, ${profileName}` : ''}. Escolha
         poucos passos e deixe espaço para respirar.
       </PageHeader>
+      {routine && (
+        <section className="routine-summary" aria-label="Rotina do dia">
+          <p className="form-help">{formatDay(habitDate.selectedDate)}</p>
+          <h2>{routine.type}</h2>
+          <p>{routine.focus}</p>
+          {routine.classes.length ? (
+            <ul>
+              {routine.classes.map((lesson, index) => (
+                <li key={index}>
+                  <span>
+                    {lesson.start}–{lesson.end}
+                  </span>{' '}
+                  · {lesson.title}
+                </li>
+              ))}
+            </ul>
+          ) : (
+            <p className="form-help">Sem aulas regulares.</p>
+          )}
+        </section>
+      )}
       <div className="today-actions">
         <div className="today-capture">
           <button
@@ -299,7 +350,7 @@ export default function TodayPage() {
       {sheet?.kind === 'log' && (
         <LogForm
           initialHabitId={sheet.habitId}
-          initialDate={today}
+          initialDate={sheet.date}
           onClose={() => setSheet(null)}
         />
       )}

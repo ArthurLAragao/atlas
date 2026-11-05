@@ -120,7 +120,7 @@ export function Shell() {
             <Link className="brand" to="/" aria-label="Atlas - início">
               <img
                 className="brand-mark"
-                src="/icons/atlas.svg"
+                src={`${import.meta.env.BASE_URL}icons/atlas.svg`}
                 width="32"
                 height="32"
                 alt=""

@@ -284,7 +284,7 @@ test('busca conteúdo e tags imediatamente, busca global encontra registros e no
   await contentField(page).fill(
     'A microarquitetura controla a execução das instruções.',
   )
-  await page.getByLabel('Tags da nota', { exact: true }).fill('UNIVERSIDADE EXEMPLO, revisão')
+  await page.getByLabel('Tags da nota', { exact: true }).fill('UNIFOR, revisão')
   await save(page)
   await page.getByRole('link', { name: 'Voltar às notas', exact: true }).click()
   const list = page.getByRole('list', {

@@ -9,6 +9,7 @@ export function EntrySheet({
   children,
   initialFocus,
   className = '',
+  dismissDisabled = false,
 }: {
   title: string
   description: string
@@ -16,6 +17,7 @@ export function EntrySheet({
   children: ReactNode
   initialFocus?: RefObject<HTMLElement | null>
   className?: string
+  dismissDisabled?: boolean
 }) {
   const previous = useRef(
     document.activeElement instanceof HTMLElement
@@ -26,13 +28,19 @@ export function EntrySheet({
     <Dialog.Root
       open
       onOpenChange={(open) => {
-        if (!open) onClose()
+        if (!open && !dismissDisabled) onClose()
       }}
     >
       <Dialog.Portal>
         <Dialog.Overlay className="sheet-overlay" />
         <Dialog.Content
           className={`data-sheet ${className}`}
+          onEscapeKeyDown={(event) => {
+            if (dismissDisabled) event.preventDefault()
+          }}
+          onInteractOutside={(event) => {
+            if (dismissDisabled) event.preventDefault()
+          }}
           onOpenAutoFocus={(event) => {
             if (initialFocus?.current) {
               event.preventDefault()
@@ -50,7 +58,11 @@ export function EntrySheet({
         >
           <header className="sheet-header glass">
             <Dialog.Title>{title}</Dialog.Title>
-            <Dialog.Close className="icon-button" aria-label="Fechar">
+            <Dialog.Close
+              className="icon-button"
+              aria-label="Fechar"
+              disabled={dismissDisabled}
+            >
               <X aria-hidden="true" />
             </Dialog.Close>
           </header>

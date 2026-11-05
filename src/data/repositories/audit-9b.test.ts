@@ -125,10 +125,10 @@ it('salvar perfil não apaga fixação feita em outra aba com a sheet aberta', a
   const original = defaultProfile()
   await repo.saveProfile(original)
   await repo.togglePinned({ type: 'projects', id: 'example-project' })
-  await repo.saveProfile({ ...original, name: 'Pessoa Exemplo' })
+  await repo.saveProfile({ ...original, name: 'Tuctu' })
   expect((await repo.snapshot()).profile).toEqual({
     ...original,
-    name: 'Pessoa Exemplo',
+    name: 'Tuctu',
     pinned: [{ type: 'projects', id: 'example-project' }],
   })
 })

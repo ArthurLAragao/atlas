@@ -16,14 +16,18 @@ export function TaskForm({
   task,
   initialDate,
   initialStatus,
+  initialTitle,
+  initialLinks,
   onClose,
 }: {
   task?: Task
   initialDate?: string
   initialStatus?: Task['status']
+  initialTitle?: string
+  initialLinks?: Task['links']
   onClose: () => void
 }) {
-  const [title, setTitle] = useState(task?.title ?? '')
+  const [title, setTitle] = useState(task?.title ?? initialTitle ?? '')
   const [priority, setPriority] = useState<Task['priority']>(
     task?.priority ?? 'medium',
   )
@@ -51,7 +55,7 @@ export function TaskForm({
       createdAt: task?.createdAt ?? now,
       updatedAt: now,
       isExample: false,
-      links: task?.links ?? [],
+      links: task?.links ?? initialLinks ?? [],
       focusMinutes: task?.focusMinutes ?? 0,
       title,
       priority,

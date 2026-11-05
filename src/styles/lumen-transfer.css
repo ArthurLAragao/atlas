@@ -1,0 +1,95 @@
+.lumen-transfer-sheet {
+  width: min(var(--content-width), calc(100vw - var(--space-8)));
+}
+.lumen-transfer-flow {
+  display: grid;
+  gap: var(--space-5);
+  min-width: var(--space-0);
+}
+.lumen-transfer-flow h2,
+.lumen-transfer-flow h3,
+.lumen-transfer-flow p {
+  margin: var(--space-0);
+}
+.lumen-transfer-summary {
+  display: grid;
+  grid-template-columns: minmax(var(--space-0), 1fr) minmax(var(--space-0), 3fr);
+  gap: var(--space-2) var(--space-4);
+}
+.lumen-transfer-summary dd {
+  margin: var(--space-0);
+  overflow-wrap: anywhere;
+}
+.lumen-transfer-summary dt {
+  color: var(--text-secondary);
+}
+.lumen-long {
+  overflow-wrap: anywhere;
+  min-width: var(--space-0);
+}
+.lumen-differences {
+  display: grid;
+  gap: var(--space-3);
+  min-width: var(--space-0);
+}
+.lumen-diff-columns {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-4);
+  min-width: var(--space-0);
+}
+.lumen-diff-columns label {
+  flex: 1 1 var(--preview-width);
+  display: grid;
+  gap: var(--space-2);
+  min-width: var(--space-0);
+}
+.lumen-diff-columns textarea {
+  font-family: var(--font-mono);
+  line-height: var(--line-body);
+  resize: vertical;
+}
+.lumen-transfer-actions {
+  position: sticky;
+  bottom: var(--space-0);
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-3);
+  padding-block: var(--space-4);
+  background: var(--surface);
+  border-top: var(--border-width) solid var(--border);
+  z-index: 1;
+}
+.lumen-history-list {
+  display: grid;
+  gap: var(--space-5);
+  padding: var(--space-0);
+  list-style: none;
+}
+.lumen-history-list li {
+  display: grid;
+  gap: var(--space-2);
+  padding-bottom: var(--space-4);
+  border-bottom: var(--border-width) solid var(--border);
+}
+
+/* Reuse Atlas primary-button tokens even when the Habits route was never loaded. */
+.lumen-transfer-sheet .button-primary {
+  background: var(--accent);
+  color: var(--bg);
+  border-color: var(--accent);
+}
+.lumen-transfer-sheet .button-primary:hover {
+  background: var(--accent);
+  box-shadow: inset 0 0 0 var(--focus-width) var(--bg);
+}
+.lumen-transfer-sheet .button-primary:disabled {
+  background: var(--surface);
+  color: var(--text-secondary);
+  border-color: var(--border);
+}
+@media (max-width: 760px) {
+  .lumen-transfer-sheet {
+    width: 100%;
+  }
+}

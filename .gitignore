@@ -1,21 +1,47 @@
-node_modules/
-dist/
-dist-ssr/
-.vercel/
-.agents/
+# Logs
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+
+node_modules
+dist
+dist-ssr
+*.local
+
+# Environment values can contain credentials; an example must use placeholders.
 .env
 .env.*
-*.local
-*.log
-*.tsbuildinfo
+!.env.example
+
+# Editor directories and files
+.vscode/*
+!.vscode/extensions.json
+.idea
+.DS_Store
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+
+# Local skills and generated verification output
+.agents/
 test-results/
 playwright-report/
-docs/*.json
-docs/screenshots/*
-!docs/screenshots/delivery/
-.vscode/
-.idea/
-.DS_Store
 
-# User-authored routine configurations remain private.
+# Local preparation evidence and future CLI metadata, never a publish allowlist.
+.vercel/
 local-private/
+docs/local-pre10b-*
+docs/screenshots/local-pre10b-*
+
+# Raw local audit output is not a public source or personal-data publish list.
+/docs/screenshots/
+/docs/*.json
+!/docs/*.example.json
+/docs/*.html
+/skills-lock.json

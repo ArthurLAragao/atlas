@@ -1,7 +1,7 @@
 import type { Plugin } from 'vite'
 
 /** Start the measured critical route downloads with the document, not after app JS. */
-export function criticalRoutePreload(): Plugin {
+export function criticalRoutePreload(base = '/'): Plugin {
   return {
     name: 'atlas-critical-route-preload',
     apply: 'build',
@@ -19,7 +19,7 @@ export function criticalRoutePreload(): Plugin {
             attrs: {
               rel: 'modulepreload',
               crossorigin: '',
-              href: `/${today.fileName}`,
+              href: `${base}${today.fileName}`,
             },
             injectTo: 'head',
           },
@@ -35,7 +35,7 @@ export function criticalRoutePreload(): Plugin {
                 rel: 'preload',
                 as: 'style',
                 crossorigin: '',
-                href: `/${asset.fileName}`,
+                href: `${base}${asset.fileName}`,
               },
               injectTo: 'head' as const,
             })),

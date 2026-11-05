@@ -28,6 +28,8 @@ import { AppointmentForm } from './AppointmentForm'
 import { WeeklyGoalForm } from './WeeklyGoalForm'
 import { TodayDirection } from './TodayDirection'
 import { TodayFeedback } from './TodayFeedback'
+import { WorkspaceActions } from './WorkspaceActions'
+import { DayOverview } from './DayOverview'
 import { useClock } from './use-clock'
 import '../../styles/tasks.css'
 import '../../styles/habits.css'
@@ -62,6 +64,8 @@ export default function TodayPage() {
   )
   const routine = routineDay(data.routine, habitDate.selectedDate)
   const pending = day.tasks.filter((task) => task.status !== 'done').length
+  const personalTasks = day.tasks.filter((task) => !task.isExample)
+  const personalHabits = aggregateDay(data.habits.filter((habit) => !habit.isExample), data.habitLogs, today)
   useEffect(() => {
     void useTasks.getState().refreshUndo()
     void useHabits.getState().refreshUndo()
@@ -270,6 +274,10 @@ export default function TodayPage() {
         Um dia de cada vez{profileName ? `, ${profileName}` : ''}. Escolha
         poucos passos e deixe espaço para respirar.
       </PageHeader>
+      <DayOverview key={today} today={today} pending={personalTasks.filter((task) => task.status !== 'done').length}
+        completed={personalTasks.filter((task) => task.status === 'done').length}
+        habitsDone={personalHabits.completed} habitsTotal={personalHabits.total} />
+      <WorkspaceActions />
       {routine && (
         <section className="routine-summary" aria-label="Rotina do dia">
           <p className="form-help">{formatDay(habitDate.selectedDate)}</p>

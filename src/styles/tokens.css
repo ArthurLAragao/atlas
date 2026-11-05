@@ -57,7 +57,11 @@
   --icon-size: 1.25rem;
   --icon-large: 1.75rem;
   --brand-mark-size: 2rem;
-  --brand-surface: #191919;
+  --brand-surface: #080d17;
+  --dashboard-column: 22rem;
+  --dashboard-dot: 0.875rem;
+  --dashboard-note-height: 8rem;
+  --accent-ink: #04101e;
   --sidebar-width: 15rem;
   --sidebar-rail: 5rem;
   --toolbar-height: 4.5rem;
@@ -121,17 +125,17 @@
   --sheet-height: 90dvh;
   --overlay: #00000080;
   color-scheme: dark;
-  --bg: #101010;
-  --surface: #191919;
-  --surface-elevated: #242424;
-  --border: #383838;
+  --bg: #030507;
+  --surface: #090e16;
+  --surface-elevated: #111b29;
+  --border: #233044;
   --control-border: #858585;
   --text-primary: #f2f2f2;
   --text-secondary: #ababab;
-  --accent: #a3c4ff;
+  --accent: #5aabff;
   --success: #aad6b7;
   --danger: #ffb4b4;
-  --glass-fill: #191919f2;
+  --glass-fill: #080e18f2;
   --shadow: 0 12px 40px #00000030;
 }
 :root[data-theme='light'] {

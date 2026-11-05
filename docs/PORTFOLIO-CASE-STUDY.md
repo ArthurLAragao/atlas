@@ -1,25 +1,55 @@
-# Atlas — caso de portfólio
+# Atlas — um centro de comando pessoal
+
+Caso baseado no candidato até 9C e preparação 10A. Não é relato de lançamento/adoção: capturas fictícias, resultados de testes/medições locais. Não foram inventados usuários, depoimentos ou ganhos pessoais de produtividade.
 
 ## Problema e proposta
 
-Organizar tarefas, hábitos, notas, estudos e projetos frequentemente exige configurar e manter a própria ferramenta. O Atlas oferece uma estrutura pronta, captura rápida por teclado e conexões entre conhecimento e ações. Não há estudo formal de mercado ou comprovação de ganho de produtividade nesta entrega.
+Organizar tarefas, hábitos, notas, faculdade e projetos pode exigir manter a própria ferramenta antes de usá-la. Atlas oferece estrutura opinativa: abrir, anotar, escolher poucos passos e conectar conhecimento a ações. Público de referência: quem estuda computação e constrói software; sem estudo formal de mercado/usabilidade comprovado nesta entrega.
 
-## Decisões de produto
+Hoje reduz a decisão inicial; captura atende criação/busca por teclado; heatmap torna constância visível; Markdown mantém escrita simples; metas/projetos/estudos compartilham IDs. Foco registra tempo e exige intenção de concluir. Não há conta/nuvem ou integração externa bloqueando o primeiro uso.
 
-Hoje apresenta poucos próximos passos e widgets ajustáveis. Heatmaps tornam registros legíveis, com alternativa textual. Markdown mantém escrita simples; metas preservam resultados-chave manuais. Perfil e XP são locais e discretos. A direção monocromática/editorial e os fluxos aprovados foram congelados; não houve redesign para encerrar a entrega.
+## Decisões de produto e design
 
-## Decisões técnicas e dificuldades
+- Estrutura pronta/exemplos removíveis; tags/vínculos/contextos sem editor de bancos customizados.
+- Sugestão de três prioridades, meta semanal explícita e progresso manual preservado.
+- Monocromia/editorial, fontes locais e materiais nas camadas funcionais. Visual aprovado foi congelado nas auditorias.
+- Teclado/foco/feedback/alternativa textual do heatmap; testes automatizados não equivalem a acessibilidade humana completa.
+- Perfil/XP privados/discretos, separados da atividade; sem punição por ausência ou comparação social.
 
-React/TypeScript por feature, Zustand, repositories/Dexie, validação Zod e funções puras isolam responsabilidades. Relações usam IDs. Timer usa timestamps para recuperação sem inventar sessões concluídas; atividade e XP são deduplicados. Concorrência entre abas, falhas de escrita, rascunhos e backups exigiram transações, conflitos explícitos e testes de regressão.
+[DECISIONS](DECISIONS.md) conserva o raciocínio e revisões. A documentação 10A aplica clareza de linguagem e descrições das capturas, sem outro redesign.
 
-PWA exige validar duas revisões reais do worker e recursos lazy offline. Parsing/editor Markdown foi separado do caminho inicial, com imports resolvidos antes das transações; validação/sanitização não foram retiradas para melhorar a nota. A performance fria continua abaixo da meta, sem outra rodada de otimização nesta entrega.
+## Decisões técnicas
+
+React/TypeScript/Vite por feature; Zustand coordena UI/snapshot; Dexie persiste atrás de AtlasRepository; Zod valida. Regras puras cobrem parser, streaks, médias/progresso, SM-2 e timer. Workbox precacheia rotas/recursos lazy e espera escolha de atualização.
+
+Timer usa timestamps, não a frequência de intervalos em aba ativa. AST reconhece wikilinks respeitando código; renderer ignora HTML e limita links/imagens. Backup completo e nota individual têm contratos distintos. [Arquitetura](ARCHITECTURE.md) · [Dados](DATA-AND-PRIVACY.md).
+
+## Dificuldades e correções
+
+Concorrência reproduzida entre abas exigiu conflitos de versão, preservação de rascunho/feedback, relações atômicas e deduplicação. Atualização PWA exigiu teste entre revisões reais com nota/timer. Na 9C, Markdown chegava à entrada por repositories e sheet fechada: separar fronteiras e resolver imports antes da transação reduziu bytes sem retirar proteção.
+
+Medição também exigiu correção: loading não representa LCP do produto; coletas inválidas anteriores foram identificadas. Finais aguardam Hoje real, publicam todas as execuções e separam frio/retorno. Um teste de download tardio foi inicialmente contornado pelo SW; separar simulação controlada de offline real verificou ambos sem enfraquecer a suíte.
 
 ## Resultados e limites
 
-O [resumo de validação](VALIDATION.md) registra os checks da cópia pública. Medição histórica local: mediana Lighthouse **86 frio / 99 retorno**, LCP frio **3,149 s**, três execuções por cenário. A meta 90, instalação física e verificações humanas continuam pendentes. Capturas no README usam registros fictícios; não foram inventadas adoção, depoimentos ou métricas pessoais.
+| Evidência 9C      | Resultado local                                                                               |
+| ----------------- | --------------------------------------------------------------------------------------------- |
+| Qualidade         | 843 unitários/105 E2E, lint/typecheck/build aprovados.                                        |
+| Backup            | Snapshot igual após exportar/limpar/importar JSON/Markdown completo em banco descartável.     |
+| PWA               | Offline/lazy/atualização com nota/timer por automação Edge; instalação física não comprovada. |
+| Entrada JS        | 325.595 para 245.519 bytes; gzip 101.388 para 77.612.                                         |
+| Lighthouse frio   | Baseline reproduzido 81, final 86; meta 90 não atingida. Histórico 9B: 87.                    |
+| Retorno preparado | Baseline 100, final 99; não confundir com primeiro acesso.                                    |
+| LCP frio mediano  | 3,658 para 3,149 s; não é medição em host público/celular físico.                             |
+
+[Relatórios individuais/método](REVIEW-ETAPA-9C.md) · [Galeria fictícia](../README.md#capturas-de-apresentação). Não há evidência de ganho real de produtividade ou auditoria humana completa.
 
 ## Processo e autoria
 
-Desenvolvimento assistido por IA/Codex, com direção de produto, requisitos, revisão de código/testes e decisões do autor. Código gerado, volume de recursos e número de testes não demonstram domínio pessoal independente de todas as tecnologias. O projeto documenta o processo; a apresentação de habilidades individuais deve se apoiar no que o autor compreende, revisa e consegue explicar/reproduzir.
+Desenvolvimento assistido por IA/Codex, com direção/requisitos do usuário, etapas, revisão/testes e decisões registradas. Código gerado, volume de recursos e contagem de testes **não provam domínio pessoal independente de todas as tecnologias**. O caso descreve o projeto; para apresentar habilidades individuais, o autor deve explicar o que revisou/compreendeu/consegue reproduzir, sem atribuir automaticamente a si todo trabalho gerado.
 
-O código próprio tem MIT autorizada; o dock e dependências conservam suas [atribuições](COMPONENT-PROVENANCE.md). A entrega usa uma cópia pública revisada com histórico novo, preservando o checkout privado e suas evidências. A hospedagem pessoal protegida não é uma demo pública. Próximos passos ficam limitados ao backlog do README, sem nova etapa automática.
+## Próximos passos
+
+Decisão humana de performance, instalação/NVDA/zoom nativo/dispositivos, conteúdo/licença e autorização separada de staging com validação HTTPS. Arquivamento de hábitos continua no backlog. Nuvem/grafo/integrações são possibilidades futuras, não recursos da release atual.
+
+A 10A prepara materiais locais e para: sem push, tag, release, staging/publicação ou aceitação da limitação pelo usuário.

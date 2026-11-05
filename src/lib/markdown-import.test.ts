@@ -33,10 +33,10 @@ describe('importação local de Markdown', () => {
   })
   it('preserva metadados desconhecidos e reconhece lista de tags', () => {
     const result = parse(
-      '---\ntags:\n - cloud\n - #cloud\n - estudo\ncourse: UNIVERSIDADE EXEMPLO\n---\n# Redes',
+      '---\ntags:\n - cloud\n - #cloud\n - estudo\ncourse: UNIFOR\n---\n# Redes',
     )
     expect(result.note.tags).toEqual(['cloud', 'estudo'])
-    expect(result.note.content).toContain('course: UNIVERSIDADE EXEMPLO')
+    expect(result.note.content).toContain('course: UNIFOR')
   })
   it.each([
     '<script>alert(1)</script>',

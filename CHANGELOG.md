@@ -1,20 +1,35 @@
 # Changelog
 
-## Atualização local preparada — 2026-10-09
+Histórico do candidato local. **Nenhuma versão pública/tag/release foi criada.** `0.0.0` no pacote não representa release publicada; evidências detalhadas ficam nas reviews.
 
-- Programação diária, dias específicos e frequência flexível; labels, horários, deslocamento de dia e opcionais por ocorrência, mantendo um ID/histórico por hábito.
-- Hoje/Ontem, data histórica, resumo compacto e registro explícito da noite anterior.
-- Importação configurável com revisão, associação de IDs, transação e proteção contra conflitos.
-- Backups completos incluem rotina/versões; hábitos e backups antigos continuam compatíveis.
-- Testes genéricos ampliados; rotina pessoal, histórico original e relatórios internos não integram a cópia pública. Sem redesign, novas dependências ou publicação automática.
+## Não publicado - preparação de staging 10B, 2026-10-06
 
-## Primeira entrega de portfólio — 2026-10-07
+- Hoje usa nome do perfil com fallback neutro; exemplo de identificador fictício.
+- Procedência compatível do dock beUI/MIT identificada, aviso de redistribuição incluído; licença do Atlas ainda não escolhida.
+- Candidatos de divulgação classificados, sem excluir arquivos ou reescrever história.
+- Plano de staging/checklist hospedado e configuração específica inativa em docs; sem deploy, push ou aceite de performance/release.
 
-Snapshot do escopo atual; não implica tag ou release v1.0.0 publicada. A versão interna do pacote/lockfile foi preservada.
+## Não publicado - preparação 10A, 2026-10-06
 
-- Hoje, captura global, tarefas em Lista/Kanban/Calendário/Tabela, hábitos/heatmaps e notas Markdown conectadas.
-- Metas/projetos por ID, disciplinas/trilhas/flashcards e timer de foco com recuperação por timestamps.
-- Perfil local, preferências/widgets, XP discreto, importação/exportação e PWA offline com atualização confirmada.
-- Marca atualizada, layouts/temas/teclado e preferências de movimento/transparência preservados.
-- Cópia pública com fixtures/contexto de exemplo anonimizados, documentação selecionada, capturas fictícias e MIT autorizada; histórico original conservado separadamente.
-- Limitações: Lighthouse histórico 86 frio / 99 retorno, testes humanos pendentes, arquivamento de hábitos e preferências fora do backup atual.
+- README corrigido para dock e funcionalidades atuais.
+- Arquitetura, dados/privacidade, gates de release/staging e caso de portfólio consolidados.
+- Sete capturas fictícias separadas das evidências de QA.
+- Licença própria ausente e revisão de identidade/evidências antigas registradas; proteção para futuros .env.
+- Sem alteração de app/CSS/modelos/backups/performance ou aprovação de release/deploy.
+
+## Candidato local — 9C, 2026-10-06
+
+- Markdown/wikilinks e ações de dados separados da entrada, preservando validação/sanitização/atomicidade.
+- 843 unitários/105 E2E; backup/offline/atualização com nota/timer revalidados.
+- Lighthouse: frio 86/retorno 99, LCP frio 3,149 s; meta 90 não atingida, testes humanos pendentes.
+- Commits `579840f` e `1686a01`. [Review 9C](docs/REVIEW-ETAPA-9C.md).
+
+## Candidato local — auditoria 9B e visual 9A
+
+- 9B corrigiu concorrência/feedback/integridade sem redesign; 840 unitários/103 E2E, histórico Lighthouse 87/100. [Review 9B](docs/REVIEW-ETAPA-9B.md).
+- 9A: perfil/atividade/fixados, preview de notas, captura/Tabela/calendário, confirmações/importação Markdown; refinamento posterior com dock/feedback transitório. [Decisões](docs/DECISIONS.md).
+
+## MVP — etapas 1 a 8
+
+- Base local-first, repositories/seed/backups, hábitos/heatmaps, tarefas, Hoje/captura, notas, metas/projetos, estudos/foco e preferências/widgets/XP/PWA.
+- [Plano/relatórios](docs/PLAN.md) · [Backlog](docs/TODO.md). Histórico de construção não representa publicação nem acessibilidade humana completa.

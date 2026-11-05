@@ -1,0 +1,273 @@
+/* Content-only theme: navigation, toolbar and global tokens remain unchanged. */
+#main {
+  --bg: #05070d;
+  --surface: #0b1018;
+  --surface-elevated: #111826;
+  --border: #60a5fa1f;
+  --control-border: #667c9c;
+  --text-primary: #eaf2ff;
+  --text-secondary: #8fa3bf;
+  --accent: #60a5fa;
+  --panel-primary: #3b82f6;
+  --panel-success: #34d399;
+  --danger: #f87171;
+  --panel-warning: #f59e0b;
+  --panel-fill: #0b1018ed;
+  --panel-glow: #3b82f610;
+  --panel-shadow: 0 8px 24px #00000014;
+  --panel-radius: var(--radius-xl);
+  --panel-padding: var(--space-6);
+  --panel-time-size: clamp(14rem, 32vw, 20rem);
+  color: var(--text-primary);
+}
+:root[data-theme='light'] #main {
+  --bg: #f2f5fa;
+  --surface: #fafcff;
+  --surface-elevated: #e7eef8;
+  --border: #285d9e33;
+  --control-border: #657d9c;
+  --text-primary: #17263d;
+  --text-secondary: #4e6584;
+  --accent: #205dbb;
+  --panel-primary: #205dbb;
+  --panel-success: #176a4b;
+  --danger: #a62335;
+  --panel-warning: #885000;
+  --panel-fill: #fafcffed;
+  --panel-glow: #3b82f608;
+}
+#main
+  :is(
+    .today-section,
+    .day-pulse,
+    .day-journal,
+    .workspace-hub,
+    .direction-section,
+    .study-next,
+    .habit-stats,
+    .notes-collection,
+    .notes-reading,
+    .task-column,
+    .focus-stage
+  ) {
+  border: var(--border-width) solid var(--border);
+  border-radius: var(--panel-radius);
+  background: var(--panel-fill);
+  box-shadow: var(--panel-shadow);
+  padding: var(--panel-padding);
+  min-width: var(--space-0);
+}
+#main :is(.today-section, .direction-section) > .section-heading h2,
+#main .direction-section > h2 {
+  font-size: var(--type-title3);
+  letter-spacing: var(--tracking-title);
+}
+#main .page-heading {
+  margin-bottom: var(--space-8);
+}
+#main .page-heading h1 {
+  letter-spacing: var(--tracking-title);
+}
+#main :is(.day-pulse, .focus-stage) {
+  background:
+    radial-gradient(ellipse at top, var(--panel-glow), transparent 70%),
+    var(--panel-fill);
+}
+#main .day-overview {
+  gap: var(--space-6);
+}
+#main .day-journal textarea {
+  background: var(--bg);
+  line-height: var(--line-body);
+}
+#main .day-metrics {
+  margin-block: var(--space-8);
+}
+#main :is(.day-pulse-heading, .day-journal .day-overline) {
+  font-size: var(--type-label);
+}
+#main .today-widget-grid[data-editorial='true'] {
+  gap: var(--space-6);
+}
+#main .today-section .task-row {
+  border-color: var(--border);
+  padding-block: var(--space-4);
+}
+#main .workspace-hub {
+  margin-block: var(--space-6) var(--space-8);
+}
+#main .workspace-hub h2 {
+  font-size: var(--type-title3);
+}
+#main .workspace-hub .form-help {
+  font-size: var(--type-label);
+}
+#main .button-primary {
+  background: var(--accent);
+  color: var(--bg);
+  border-color: var(--accent);
+}
+:root[data-theme='light'] #main .button-primary {
+  color: var(--surface);
+}
+#main .button:not(.button-primary) {
+  background: var(--surface-elevated);
+  border-color: var(--border);
+}
+#main :is(.button, .icon-button):focus-visible {
+  outline: var(--focus-width) solid var(--accent);
+  outline-offset: var(--focus-offset);
+}
+#main :is(input, select, textarea):focus-visible {
+  outline-color: var(--accent);
+}
+#main :is(input, select, textarea) {
+  font-family: var(--font-family);
+}
+#main .workspace-actions label {
+  display: grid;
+  gap: var(--space-2);
+  flex: 1;
+  min-width: var(--space-0);
+  font-size: var(--type-label);
+}
+#main .workspace-actions input {
+  min-height: var(--control-size);
+  padding: var(--space-3);
+  border: var(--border-width) solid var(--control-border);
+  border-radius: var(--radius-md);
+  background: var(--bg);
+  color: var(--text-primary);
+  width: 100%;
+}
+#main .task-check[aria-checked='true'],
+#main .task-row[data-status='done'] .task-check {
+  color: var(--panel-success);
+  border-color: var(--panel-success);
+}
+#main .direction-section {
+  margin-top: var(--space-6);
+}
+#main .direction-row {
+  padding: var(--space-4) var(--space-2);
+  border-color: var(--border);
+}
+#main .direction-row strong {
+  font-size: var(--type-body);
+  font-weight: var(--weight-medium);
+}
+#main .direction-mini-progress progress {
+  height: var(--space-1);
+}
+#main .direction-filters,
+#main .task-filters {
+  padding: var(--space-5);
+  border: var(--border-width) solid var(--border);
+  border-radius: var(--radius-lg);
+  background: var(--surface);
+}
+#main .task-view-controls {
+  gap: var(--space-4);
+  margin-block: var(--space-6);
+}
+#main .tasks-page > .task-list,
+#main .task-date-groups {
+  border: var(--border-width) solid var(--border);
+  border-radius: var(--panel-radius);
+  background: var(--surface);
+  padding: var(--space-5);
+}
+#main .task-date-groups .task-list {
+  border: var(--space-0);
+  padding: var(--space-0);
+}
+#main .task-column {
+  padding: var(--space-4);
+}
+#main .task-column .task-row {
+  background: var(--surface-elevated);
+  border-radius: var(--radius-md);
+  margin-top: var(--space-3);
+  padding: var(--space-3);
+}
+#main .habit-stats {
+  margin-block: var(--space-6);
+}
+#main .habit-stats strong {
+  font-variant-numeric: tabular-nums;
+}
+#main .notes-workspace {
+  gap: var(--space-6);
+}
+#main .notes-collection,
+#main .notes-reading {
+  overflow: hidden;
+}
+#main .note-row {
+  border-radius: var(--radius-md);
+  padding: var(--space-4);
+}
+#main .note-row:hover {
+  background: var(--surface-elevated);
+}
+#main .study-priorities {
+  gap: var(--space-6);
+}
+#main .study-next {
+  padding: var(--space-5);
+}
+#main .focus-stage {
+  padding-block: var(--space-10);
+}
+#main .focus-clock {
+  width: var(--panel-time-size);
+  min-height: var(--panel-time-size);
+  margin: var(--space-8) auto;
+  display: grid;
+  place-items: center;
+  position: relative;
+  font-size: clamp(3rem, 8vw, 5rem);
+}
+#main .focus-ring {
+  position: absolute;
+  inset: var(--space-0);
+  width: 100%;
+  height: 100%;
+  transform: rotate(-90deg);
+  fill: none;
+  stroke-width: var(--space-1);
+  stroke: var(--border);
+}
+#main .focus-ring-value {
+  stroke: var(--accent);
+  stroke-linecap: round;
+}
+#main .focus-setup {
+  padding: var(--panel-padding);
+  border: var(--border-width) solid var(--border);
+  border-radius: var(--panel-radius);
+  background: var(--surface);
+}
+@media (max-width: 768px) {
+  #main {
+    --panel-padding: var(--space-5);
+  }
+  #main .today-widget-grid[data-editorial='true'] {
+    grid-template-columns: minmax(var(--space-0), 1fr);
+  }
+  #main .today-widget-grid[data-editorial='true'] > [data-today-widget] {
+    grid-column: 1;
+    grid-row: auto;
+  }
+}
+@media (max-width: 480px) {
+  #main {
+    --panel-padding: var(--space-4);
+  }
+  #main .day-metrics {
+    gap: var(--space-2);
+  }
+  #main :is(.direction-filters, .task-filters) {
+    padding: var(--space-3);
+  }
+}

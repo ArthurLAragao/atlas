@@ -24,7 +24,7 @@ describe('perfil e histórico no mesmo repository', () => {
   })
   it('salva, exporta, limpa e restaura perfil e fixados', async () => {
     await repo.initialize()
-    await repo.saveProfile({ ...defaultProfile(), name: 'Pessoa Exemplo' })
+    await repo.saveProfile({ ...defaultProfile(), name: 'Tuctu' })
     await repo.togglePinned({ type: 'projects', id: 'example-project' })
     const before = await repo.snapshot()
     const backup = decodeBackup(encodeBackup(before))

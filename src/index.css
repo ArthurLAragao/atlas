@@ -3,6 +3,7 @@
 @source '../index.html';
 @import './styles/tokens.css';
 @import './styles/global.css';
+@import './styles/premium-panels.css';
 
 @theme inline {
   --color-bg: var(--bg);

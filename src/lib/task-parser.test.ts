@@ -91,10 +91,10 @@ describe('parseTaskInput', () => {
 
   it('deduplicates tags without changing their order', () => {
     const result = parseTaskInput(
-      'Revisar #Faculdade #trabalho #FACULDADE #ciência',
+      'Revisar #Faculdade #kyber #FACULDADE #ciência',
       thursday,
     )
-    expect(result.tags).toEqual(['faculdade', 'trabalho', 'ciência'])
+    expect(result.tags).toEqual(['faculdade', 'kyber', 'ciência'])
     expect(result.title).toBe('Revisar')
   })
 

@@ -1,6 +1,6 @@
 # Arquitetura do Atlas
 
-Visão do código congelado para a primeira entrega pública.
+Referência do candidato após a 9C, baseline `1686a01`. A 10A documenta o código sem alterar aplicação/modelos/desenho. Decisões históricas em [DECISIONS](DECISIONS.md).
 
 ## Camadas e módulos
 
@@ -42,8 +42,8 @@ Na 9C, imports de salvar/renomear notas e proteger remoção de exemplos são re
 
 Rotas: `/`, `/tarefas`, `/habitos`, `/notas`, `/metas`, `/estudos`, `/foco`, `/perfil`, `/preferencias`; detalhes por query. Wildcard mostra Página não encontrada dentro do shell. `features/notes/graph` é reserva arquitetural, sem rota de grafo.
 
-Vite gera dist. vite-plugin-pwa/Workbox gera manifest/worker/precache, incluindo chunks lazy. Registro desativado em dev; em produção começa após conteúdo real renderizado. Prompt e `skipWaiting: false` mantêm escolha de atualizar; cache de assets e IndexedDB são separados. [Validação e limites](VALIDATION.md).
+Vite gera dist. vite-plugin-pwa/Workbox gera manifest/worker/precache, incluindo chunks lazy. Registro desativado em dev; em produção começa após conteúdo real renderizado. Prompt e `skipWaiting: false` mantêm escolha de atualizar; cache de assets e IndexedDB são separados. [Preflight de staging](RELEASE-CHECKLIST.md).
 
-Vitest/Testing Library: funções, stores, componentes/repositories com jsdom/fake-indexeddb. Playwright: Edge, um worker, contextos descartáveis, fluxos/teclado/concorrência/offline e duas revisões reais do worker. Axe avalia estados automatizados; Lighthouse separa frio/retorno. Os testes existentes foram preservados; resultados da cópia pública em [VALIDATION](VALIDATION.md).
+Vitest/Testing Library: funções, stores, componentes/repositories com jsdom/fake-indexeddb. Playwright: Edge, um worker, contextos descartáveis, fluxos/teclado/concorrência/offline e duas revisões reais do worker. Axe avalia estados automatizados; Lighthouse separa frio/retorno. 843 unitários/105 E2E da 9C foram preservados.
 
-Não há backend, conta remota, integrações ou notificações. Instalação física, Safari/iOS, NVDA e zoom nativo permanecem sem comprovação; [limites e resultados](VALIDATION.md) separam automação e verificações humanas.
+Não há backend, conta remota, integrações ou notificações. Instalação física, Safari/iOS, NVDA e zoom nativo permanecem sem comprovação; [checklist humano](MANUAL-RELEASE-CHECKLIST.md) e reviews 9B/9C são a fonte dos resultados.

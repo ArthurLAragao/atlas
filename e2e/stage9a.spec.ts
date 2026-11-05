@@ -174,14 +174,14 @@ test('perfil privado: edição, atividade deduplicada, fixados e backup com limp
     exact: true,
   })
   await expect(dialog.getByLabel('Nome de exibição')).toBeFocused()
-  await dialog.getByLabel('Nome de exibição').fill('Pessoa Exemplo — local')
-  await dialog.getByLabel('Identificador opcional').fill('@pessoa_exemplo')
+  await dialog.getByLabel('Nome de exibição').fill('Tuctu — local')
+  await dialog.getByLabel('Identificador opcional').fill('@tuctu')
   await dialog.getByLabel('Uma frase sua').fill('Um dia de cada vez.')
   await dialog.getByRole('button', { name: 'Salvar perfil' }).click()
   await expect(edit).toBeFocused()
   await page.reload()
   await expect(
-    page.getByRole('heading', { name: 'Pessoa Exemplo — local', exact: true, level: 1 }),
+    page.getByRole('heading', { name: 'Tuctu — local', exact: true, level: 1 }),
   ).toBeVisible()
   for (const [path, title] of [
     ['/metas?project=example-project', 'Atlas'],

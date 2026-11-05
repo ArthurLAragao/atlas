@@ -26,7 +26,7 @@ export const defaultPreferences: Preferences = {
   accent: 'blue',
   collapsed: false,
   solid: false,
-  contexts: ['Faculdade', 'Trabalho', 'Projetos', 'Pessoal', 'Academia'],
+  contexts: ['Faculdade', 'Kyber', 'Projetos', 'Pessoal', 'Academia'],
   focusMinutes: 25,
   shortBreakMinutes: 5,
   longBreakMinutes: 15,

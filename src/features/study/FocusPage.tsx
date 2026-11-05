@@ -219,6 +219,28 @@ function FocusView({ initialTask }: { initialTask: string }) {
           aria-live="off"
           aria-label={`Tempo restante: ${Math.floor(remaining / 60)} minutos e ${remaining % 60} segundos`}
         >
+          <svg className="focus-ring" viewBox="0 0 128 128" aria-hidden="true">
+            <circle cx="64" cy="64" r="58" />
+            <circle
+              className="focus-ring-value"
+              cx="64"
+              cy="64"
+              r="58"
+              pathLength="100"
+              strokeDasharray="100"
+              strokeDashoffset={
+                100 -
+                Math.min(
+                  100,
+                  Math.max(
+                    0,
+                    (remaining / (active?.plannedSeconds ?? plannedSeconds)) *
+                      100,
+                  ),
+                )
+              }
+            />
+          </svg>
           {focusClock(remaining)}
         </div>
         <p role="status">{liveStatus}</p>

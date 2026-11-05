@@ -4,12 +4,15 @@ import tailwindcss from '@tailwindcss/vite'
 import { defineConfig } from 'vitest/config'
 import { criticalRoutePreload } from './scripts/critical-route-preload.js'
 
+const base = process.env.GITHUB_PAGES === 'true' ? '/atlas/' : '/'
+
 // https://vite.dev/config/
 export default defineConfig({
+  base,
   plugins: [
     react(),
     tailwindcss(),
-    criticalRoutePreload(),
+    criticalRoutePreload(base),
     VitePWA({
       registerType: 'prompt',
       injectRegister: false,
@@ -22,14 +25,14 @@ export default defineConfig({
         'icons/atlas.svg',
       ],
       manifest: {
-        id: '/',
+        id: base,
         name: 'Atlas',
         short_name: 'Atlas',
         description:
           'Seu espaço pessoal para tarefas, hábitos, estudos e projetos.',
         lang: 'pt-BR',
-        start_url: '/',
-        scope: '/',
+        start_url: base,
+        scope: base,
         display: 'standalone',
         orientation: 'any',
         theme_color: '#141414',
@@ -37,28 +40,36 @@ export default defineConfig({
         categories: ['productivity', 'education'],
         icons: [
           {
-            src: '/icons/atlas-192.png',
+            src: `${base}icons/atlas-192.png`,
             sizes: '192x192',
             type: 'image/png',
             purpose: 'any',
           },
           {
-            src: '/icons/atlas-512.png',
+            src: `${base}icons/atlas-512.png`,
             sizes: '512x512',
             type: 'image/png',
             purpose: 'any',
           },
           {
-            src: '/icons/atlas-maskable-512.png',
+            src: `${base}icons/atlas-maskable-512.png`,
             sizes: '512x512',
             type: 'image/png',
             purpose: 'maskable',
           },
         ],
         shortcuts: [
-          { name: 'Hoje', short_name: 'Hoje', url: '/' },
-          { name: 'Tarefas', short_name: 'Tarefas', url: '/tarefas' },
-          { name: 'Notas', short_name: 'Notas', url: '/notas' },
+          { name: 'Hoje', short_name: 'Hoje', url: base },
+          {
+            name: 'Tarefas',
+            short_name: 'Tarefas',
+            url: base === '/' ? '/tarefas' : `${base}#/tarefas`,
+          },
+          {
+            name: 'Notas',
+            short_name: 'Notas',
+            url: base === '/' ? '/notas' : `${base}#/notas`,
+          },
         ],
       },
       workbox: {
@@ -107,6 +118,7 @@ export default defineConfig({
     },
   },
   test: {
+    pool: 'threads',
     // Serialize jsdom cold imports on this Windows runner. Parallel workers
     // can stall lazy-module preparation; keep assertion/time limits unchanged.
     maxWorkers: 1,

@@ -1,0 +1,50 @@
+# Auditoria visual — 9A rebuild
+
+Registrada em 04/10/2026, antes de alterar componentes. React/TypeScript/Vite, app pessoal local para Tuctu. Tese: conteúdo editorial, ação imediata e um dock que mantém o espaço de trabalho ao alcance. As anotações mais recentes substituem a sidebar prevista no anexo por navegação inferior flutuante.
+
+## Evidência de partida
+
+96 capturas da versão de produção em 1440/1280/768/375 px, claro e escuro, mais palette, sheet e date picker. Índice: `visual-before-redesign.json`; arquivos `screenshots/redesign-9a-before-*`. Nenhum overflow da página nas 96 combinações. Dados de um contexto descartável, separados do navegador pessoal. Portfólio `127.0.0.1:4173` indisponível (conexão recusada); não alegamos comparação direta. Seek observado em estado circular e expansão para input; Coss e Geist observados como referências.
+
+![Visão de partida](screenshots/redesign-9a-before-overview.png)
+
+| Tela/componente        | O quê / severidade                                                                               | Por quê / causa                                             | Correção concreta                                                                                  | Validação esperada                                                                               |
+| ---------------------- | ------------------------------------------------------------------------------------------------ | ----------------------------------------------------------- | -------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------ |
+| Shell, todas as rotas  | Alto: sidebar ocupa 240 px; perfil e configurações repetidos no fim                              | Estrutura prioriza chrome e deixa ações pessoais longe      | Dock inferior fixo, marca no header, perfil no dock, Aparência/Preferências juntas                 | Todas as rotas acessíveis por link/teclado, dock não cobre conteúdo, 375 px sem overflow         |
+| Captura do header      | Alto: retângulo genérico sem relação com entrada                                                 | Botão abre dialog, mas não oferece captura direta           | Seek: ícone expande campo imediatamente; Enter encaminha consulta para a palette existente         | Foco imediato, Escape, Ctrl/Cmd+K inalterado, reduced motion                                     |
+| Hoje                   | Alto: longa coluna de blocos com mesmo peso; três prioridades só aparecem depois de muitas ações | Todos os widgets usam apresentação idêntica                 | Cabeçalho com ações agrupadas, leitura editorial em grade, prioridades maiores e hábitos compactos | Ordem DOM segue organização do usuário, grade se adapta a 200%, widgets e pendências preservados |
+| Avisos/desfazer        | Alto: ocupa linha inteira e reaparece ao restaurar o undo                                        | Feedback deriva da disponibilidade do undo sem prazo visual | Toasts no canto inferior direito, expiração visual, pausa em foco/hover, erros persistentes        | Undo original preservado, foco nunca some durante interação, aviso não renasce por render        |
+| Tarefas Lista          | Alto: selects visíveis e metadados demais por linha                                              | Ações sem disclosure; filtros dispersos                     | Menu acessível para situação, filtros em toolbar, agrupamentos por prazo                           | Mesmos estados, parser, virtualização, mover em Kanban por teclado                               |
+| Tarefas Kanban/Tabela  | Médio: contêineres/filtros têm peso semelhante ao conteúdo                                       | Bordas e ações redundantes                                  | Cabeçalhos compactos, hairlines e tabs coerentes                                                   | Contagens reais, scroll explícito em mobile, foco preservado                                     |
+| Calendário/date picker | Médio: seletor gráfico sempre usa sheet, mesmo em desktop                                        | Primitive de apresentação pouco contextual                  | Date picker ancorado em desktop, sheet em compactos, mesma grade/teclado                           | Escape/foco, 200% texto, selecionar/limpar data, todas as features                               |
+| Hábitos                | Médio: zero streak é técnico/punitivo; registro e heatmap competem                               | Linguagem e densidade homogêneas                            | Comece hoje; lista compacta, heatmap com legenda e respiro                                         | Registros, alternativa textual e tooltip preservados                                             |
+| Notas                  | Alto: repetição de criação e lista sem contexto de leitura                                       | Lista e editor são experiências separadas                   | Coluna de coleção com captura/filtros; detalhe/editor em largura de leitura                        | Sem perda de rascunho, preview 600 ms, backlinks e importação preservados                        |
+| Metas/projetos         | Médio: duas coleções têm igual destaque                                                          | Ausência de filtro por tipo                                 | Segmented control para coleções e detalhes por seção                                               | Criar ambos, vínculos e progresso manual intactos                                                |
+| Estudos/flashcards     | Médio: listas e revisão competem                                                                 | Próximo passo e biblioteca sem hierarquia                   | Revisão/próximo prazo em primeiro plano, coleções e detalhes com listas                            | Qualidade 0–5, médias e faltas sem mudança                                                       |
+| Foco                   | Médio: configurações chamam atenção igual ao timer                                               | Formulário exposto continuamente                            | Timer amplo, modos em controle segmentado, configuração sob demanda                                | Space/Escape, refresh e timestamps idênticos                                                     |
+| Perfil                 | Médio: header centralizado também em áreas estreitas                                             | Falta de adaptação de composição                            | Métricas em faixa com divisores, header alinhado na largura compacta                               | Avatar local, pins, histórico e backup sem mudança                                               |
+| Preferências           | Médio: longa sequência de campos                                                                 | Sem agrupamento editorial                                   | Aparência, Experiência, Foco, Dados e dispositivo em grupos                                        | Todos os campos acessíveis, limpeza forte e exportação visíveis                                  |
+
+## Referências HIG e limites
+
+Consultados via `hig-lookup.md`: accessibility, design-principles, layout, typography, color, dark-mode, materials, liquid-glass, motion, feedback, buttons, lists-and-tables, text-fields, toggles, search-fields, searching, sheets, alerts, popovers, pickers, toolbars, sidebars, tab-bars, onboarding, icons, keyboards; designing-for-ios/macos e cross-platform. O catálogo não tem arquivos calendars/navigation/dialogs: os temas são roteados para pickers, tab-bars/sidebars/toolbars e alerts/sheets/popovers.
+
+`layout.md > Visual hierarchy`: “Group related items”; `sidebars.md` permite controle mais compacto; `tab-bars.md > Best practices` exige labels e navegação previsível. `materials.md > Liquid Glass`: “Don't use Liquid Glass in the content layer.” `accessibility.md > Cognitive` recomenda minimizar interfaces temporizadas: o requisito de toast passageiro será conciliado com pausa em foco/hover, erros sem expiração e desfazer ainda disponível no repository. CSS web aproxima materiais, não reproduz componentes nativos Apple.
+
+## Ordem e decisão de composição
+
+1. Tokens/contraste/primitives e dock. 2. Hierarquia por rota. 3. Seek/feedback/motion. 4. Regressão funcional, Axe, screenshots e Lighthouse. 5. Documentação e commits.
+
+Regular: `[marca / localização] [Seek] [dados] [aparência]` → `[título + ação]` → `[prioridades largas | direção]` → `[hábitos]` → `[dock central]`.
+
+Compacto: `[marca / ações]` → `[título]` → `[conteúdo na ordem escolhida]` → `[dock compacto, labels acessíveis]`.
+
+O ponto específico do Atlas é a relação entre poucos próximos passos e continuidade registrada no heatmap. Retiramos o rodapé de ações repetidas para reforçar essa relação, sem criar estatísticas decorativas nem novos módulos.
+
+## Fechamento da revisão visual
+
+Os achados de estrutura acima foram tratados nas respectivas telas; comparação em `REVIEW-REDESIGN-9A.md`. A matriz posterior cobre novamente as 96 combinações (12 telas/visões × quatro larguras × dois temas), com **zero overflow da página e zero violações Axe**. As capturas adicionais cobrem editor, preview por teclado/touch, flashcard, importação Markdown, Seek, palette, sheet e date picker.
+
+A revisão encontrou e corrigiu ainda três falhas de acessibilidade: montagem lazy tomando foco de controles ativos, botões compactos abaixo de 44 px de largura e feedback cobrindo o cabeçalho com texto ampliado. Também corrigiu o alinhamento do título do Perfil após limitar a largura do foco de h1. Cada achado tem O quê, Por quê e Correção na revisão final.
+
+Texto 200%, teclas, foco e Escape são exercitados nos testes de browser. Contraste de tokens foi calculado por luminância WCAG em 36 pares, com mínimo de texto 5,53:1; as medidas estão em `contrast-redesign-9a.json`. Resultados funcionais e performance ficam nos relatórios finais, sem substituir uma futura auditoria 9B ou alegar teste físico de leitores de tela.

@@ -14,6 +14,8 @@ import { NoteList } from './NoteList'
 import { NoteFeedback } from './NoteFeedback'
 import { QuickNote } from './QuickNote'
 import { MarkdownImportButton } from '../../components/MarkdownImportButton'
+import { LumenTransferButton } from './LumenTransferButton'
+import { LumenCaptureButton } from './LumenCaptureButton'
 import '../../styles/notes.css'
 
 export default function NotesPage() {
@@ -117,6 +119,8 @@ export default function NotesPage() {
             <section className="notes-collection" aria-label="Coleção de notas">
               <div className="note-actions">
                 <MarkdownImportButton />
+                <LumenTransferButton />
+                <LumenCaptureButton />
                 <button
                   className="button"
                   onClick={() => {

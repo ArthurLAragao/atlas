@@ -9,7 +9,8 @@ const draftSchema = z.object({
   basedOn: z.string(),
 })
 export type NoteDraft = z.infer<typeof draftSchema>
-const key = 'atlas.note-drafts.v1'
+export const noteDraftStorageKey = 'atlas.note-drafts.v1'
+const key = noteDraftStorageKey
 function read(): Record<string, NoteDraft> {
   try {
     return z
@@ -61,3 +62,25 @@ export const useDrafts = create<DraftState>((set, get) => ({
     set({ drafts, error: persist(id) })
   },
 }))
+
+/** Read-only transfer guard: consult BOTH persistent and in-memory drafts.
+ * Storage denial/corruption is not evidence that drafts are absent.
+ * localStorage and IndexedDB are not an atomic cross-storage transaction.
+ */
+export function readLumenDraftStatus(): import('../../lib/lumen-atlas/plan').DraftStatus {
+  try {
+    const memory = useDrafts.getState()
+    if (memory.error) return { checked: false, ids: [] }
+    const persistent = z
+      .record(z.string(), draftSchema)
+      .parse(JSON.parse(localStorage.getItem(key) ?? '{}'))
+    return {
+      checked: true,
+      ids: [
+        ...new Set([...Object.keys(memory.drafts), ...Object.keys(persistent)]),
+      ],
+    }
+  } catch {
+    return { checked: false, ids: [] }
+  }
+}
